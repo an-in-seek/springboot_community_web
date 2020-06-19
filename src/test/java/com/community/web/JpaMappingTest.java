@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
 import com.community.web.domain.Board;
 import com.community.web.domain.User;
 import com.community.web.domain.enums.BoardType;
@@ -44,8 +45,8 @@ public class JpaMappingTest {
     public void init() {
         User user = userRepository.save(User.builder()
         		.userId(userId)
-        		.userPw(userPw)
-        		.userName(userName)
+        		.password(userPw)
+        		.username(userName)
         		.userBirthDate(userBirthDate)
         		.userSex(userSex)
                 .email(email)
@@ -66,8 +67,8 @@ public class JpaMappingTest {
     public void verifyData() {
         User user = userRepository.findByEmail(email);
         assertThat(user.getUserId(), is(userId));
-        assertThat(user.getUserPw(), is(userPw));
-        assertThat(user.getUserName(), is(userName));
+        assertThat(user.getPassword(), is(userPw));
+        assertThat(user.getUsername(), is(userName));
         assertThat(user.getUserBirthDate(), is(userBirthDate));
         assertThat(user.getUserSex(), is(userSex));
         assertThat(user.getEmail(), is(email));

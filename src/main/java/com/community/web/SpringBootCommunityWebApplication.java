@@ -26,8 +26,8 @@ public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 		return (args) -> {
 			User user = userRepository.save(User.builder()
 					.userId("test")
-					.userPw("123456789")
-					.userName("seek")
+					.password("123456789")
+					.username("seek")
 					.userBirthDate("1989-08-28")
 					.userSex(SexType.MALE)
 					.email("seek@gmail.com")

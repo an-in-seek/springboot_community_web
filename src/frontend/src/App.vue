@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <nav class="navbar navbar-expand navbar-dark bg-dark">
-            <a href="href" class="navbar-brand" @click.prevent>bezKoder</a>
+            <a href="href" class="navbar-brand" @click.prevent="@click.prevent">bezKoder</a>
             <div class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <router-link to="/home" class="nav-link">
@@ -66,6 +66,7 @@
                         .roles
                         .includes('ROLE_ADMIN');
                 }
+
                 return false;
             },
             showModeratorBoard() {
@@ -75,6 +76,7 @@
                         .roles
                         .includes('ROLE_MODERATOR');
                 }
+
                 return false;
             }
         },

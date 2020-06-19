@@ -2,18 +2,23 @@ package com.community.web.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import com.community.web.domain.enums.SexType;
 import com.community.web.domain.enums.SocialType;
 
+@Setter
 @Getter
 @NoArgsConstructor
 @Entity
-@Table
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = "USER_NAME"), @UniqueConstraint(columnNames = "EMAIL") })
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -21,16 +26,16 @@ public class User implements Serializable {
 	@Id
 	@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long userNo;
+	private Long id;
 
 	@Column
 	private String userId;
 
 	@Column
-	private String userPw;
+	private String password;
 
 	@Column
-	private String userName;
+	private String username;
 
 	@Column
 	private String userBirthDate;
@@ -48,19 +53,23 @@ public class User implements Serializable {
 	@Column
 	@Enumerated(EnumType.STRING)
 	private SocialType socialType;
-
+	
 	@Column
 	private LocalDateTime createdDate;
 
 	@Column
 	private LocalDateTime updatedDate;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles = new HashSet<>();
 
 	@Builder
-	public User(String userId, String userPw, String userName, String userBirthDate, SexType userSex, String email,
+	public User(String userId, String password, String username, String userBirthDate, SexType userSex, String email,
 			String pincipal, SocialType socialType, LocalDateTime createdDate, LocalDateTime updatedDate) {
 		this.userId = userId;
-		this.userPw = userPw;
-		this.userName = userName;
+		this.password = password;
+		this.username = username;
 		this.userBirthDate = userBirthDate;
 		this.userSex = userSex;
 		this.email = email;
