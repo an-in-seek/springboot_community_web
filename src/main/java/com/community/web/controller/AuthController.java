@@ -55,6 +55,12 @@ public class AuthController {
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
+		if (!userRepository.existsByUsername(loginRequest.getUsername())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Please check your ID and Password!"));
+		}
+		
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -88,13 +94,12 @@ public class AuthController {
 		}
 
 		// Create new user's account
-		User user = User.builder()
-        		.username(signUpRequest.getUsername())
-        		.password(encoder.encode(signUpRequest.getPassword()))
-                .email(signUpRequest.getEmail())
-                .createdDate(LocalDateTime.now())
-                .updatedDate(LocalDateTime.now())
-                .build();
+		User user = new User();
+		user.setUsername(signUpRequest.getUsername());
+		user.setPassword(encoder.encode(signUpRequest.getPassword()));
+		user.setEmail(signUpRequest.getEmail());	
+		user.setCreatedDate(LocalDateTime.now());
+		user.setUpdatedDate(LocalDateTime.now());
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();

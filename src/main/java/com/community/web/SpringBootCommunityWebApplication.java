@@ -16,16 +16,15 @@ import com.community.web.repository.UserRepository;
 public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootCommunityWebApplication.class, args);
+		SpringApplication.run(SpringBootCommunityWebApplication.class, args); 
 	}
-	
 	
 	@Bean
 	public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository, RoleRepository roleRepository) {
 		return (args) -> {
-			roleRepository.save(Role.builder().name(ERole.ROLE_ADMIN).build());
-			roleRepository.save(Role.builder().name(ERole.ROLE_MODERATOR).build());
-			roleRepository.save(Role.builder().name(ERole.ROLE_USER).build());
+			roleRepository.save(new Role(ERole.ROLE_ADMIN));
+			roleRepository.save(new Role(ERole.ROLE_MODERATOR));
+			roleRepository.save(new Role(ERole.ROLE_USER));
 			/*
 			User user = userRepository.save(User.builder()
 					.username("test")
@@ -51,6 +50,5 @@ public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 			*/
 		};
 	}
-	
 
 }

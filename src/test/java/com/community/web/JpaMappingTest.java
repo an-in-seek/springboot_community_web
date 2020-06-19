@@ -43,16 +43,19 @@ public class JpaMappingTest {
 
     @Before
     public void init() {
-        User user = userRepository.save(User.builder()
-        		.username(username)
-        		.password(password)
-        		.userNickname(userNickname)
-        		.userBirthDate(userBirthDate)
-        		.userSex(userSex)
-                .email(email)
-                .createdDate(LocalDateTime.now())
-                .build());
+    	// 사용자 데이터 생성
+    	User user = new User();
+		user.setUsername(username);
+		user.setPassword(password);
+		user.setUserNickname(userNickname);
+		user.setUserBirthDate(userBirthDate);
+		user.setUserSex(userSex);
+		user.setEmail(email);	
+		user.setCreatedDate(LocalDateTime.now());
+		user.setUpdatedDate(LocalDateTime.now());
+        userRepository.save(user);
 
+        // 게시판 데이터 생성
         boardRepository.save(Board.builder()
                 .boardTitle(boardTitle)
                 .boardSubTitle(boardSubTitle)
