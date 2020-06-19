@@ -11,17 +11,18 @@ import javax.persistence.Table;
 
 import com.community.web.domain.enums.ERole;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Setter
 @Getter
-@NoArgsConstructor
 @Entity
 @Table
 public class Role {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -30,6 +31,7 @@ public class Role {
 	@Column(length = 20)
 	private ERole name;
 
+	@Builder
 	public Role(ERole name) {
 		this.name = name;
 	}

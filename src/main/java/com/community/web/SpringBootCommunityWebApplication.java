@@ -1,17 +1,15 @@
 package com.community.web;
 
-import java.time.LocalDateTime;
-import java.util.stream.IntStream;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import com.community.web.domain.Board;
-import com.community.web.domain.User;
-import com.community.web.domain.enums.BoardType;
-import com.community.web.domain.enums.SexType;
+
+import com.community.web.domain.Role;
+import com.community.web.domain.enums.ERole;
 import com.community.web.repository.BoardRepository;
+import com.community.web.repository.RoleRepository;
 import com.community.web.repository.UserRepository;
 
 @SpringBootApplication
@@ -21,13 +19,18 @@ public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 		SpringApplication.run(SpringBootCommunityWebApplication.class, args);
 	}
 	
+	
 	@Bean
-	public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository) {
+	public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository, RoleRepository roleRepository) {
 		return (args) -> {
+			roleRepository.save(Role.builder().name(ERole.ROLE_ADMIN).build());
+			roleRepository.save(Role.builder().name(ERole.ROLE_MODERATOR).build());
+			roleRepository.save(Role.builder().name(ERole.ROLE_USER).build());
+			/*
 			User user = userRepository.save(User.builder()
-					.userId("test")
+					.username("test")
 					.password("123456789")
-					.username("seek")
+					.userNickname("seek")
 					.userBirthDate("1989-08-28")
 					.userSex(SexType.MALE)
 					.email("seek@gmail.com")
@@ -45,7 +48,9 @@ public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 						.updatedDate(LocalDateTime.now())
 						.user(user).build())
 			);
+			*/
 		};
 	}
+	
 
 }

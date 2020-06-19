@@ -22,9 +22,9 @@ import com.community.web.repository.UserRepository;
 public class JpaMappingTest {
     
 	// 사용자 정보
-	private final String userId = "test";
-	private final String userPw = "123456789";
-	private final String userName = "seek";
+	private final String username = "test";
+	private final String password = "123456789";
+	private final String userNickname = "seek";
 	private final String userBirthDate = "1989-08-28";
 	private final SexType userSex = SexType.MALE;
 	private final String email = "test@gmail.com";
@@ -44,9 +44,9 @@ public class JpaMappingTest {
     @Before
     public void init() {
         User user = userRepository.save(User.builder()
-        		.userId(userId)
-        		.password(userPw)
-        		.username(userName)
+        		.username(username)
+        		.password(password)
+        		.userNickname(userNickname)
         		.userBirthDate(userBirthDate)
         		.userSex(userSex)
                 .email(email)
@@ -66,9 +66,9 @@ public class JpaMappingTest {
     @Test
     public void verifyData() {
         User user = userRepository.findByEmail(email);
-        assertThat(user.getUserId(), is(userId));
-        assertThat(user.getPassword(), is(userPw));
-        assertThat(user.getUsername(), is(userName));
+        assertThat(user.getUsername(), is(username));
+        assertThat(user.getPassword(), is(password));
+        assertThat(user.getUserNickname(), is(userNickname));
         assertThat(user.getUserBirthDate(), is(userBirthDate));
         assertThat(user.getUserSex(), is(userSex));
         assertThat(user.getEmail(), is(email));

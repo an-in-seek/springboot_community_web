@@ -18,7 +18,7 @@ import com.community.web.domain.enums.SocialType;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = "USER_NAME"), @UniqueConstraint(columnNames = "EMAIL") })
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email") })
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -29,13 +29,13 @@ public class User implements Serializable {
 	private Long id;
 
 	@Column
-	private String userId;
+	private String username;
 
 	@Column
 	private String password;
 
 	@Column
-	private String username;
+	private String userNickname;
 
 	@Column
 	private String userBirthDate;
@@ -65,11 +65,11 @@ public class User implements Serializable {
 	private Set<Role> roles = new HashSet<>();
 
 	@Builder
-	public User(String userId, String password, String username, String userBirthDate, SexType userSex, String email,
+	public User(String username, String password, String userNickname, String userBirthDate, SexType userSex, String email,
 			String pincipal, SocialType socialType, LocalDateTime createdDate, LocalDateTime updatedDate) {
-		this.userId = userId;
-		this.password = password;
 		this.username = username;
+		this.password = password;
+		this.userNickname = userNickname;
 		this.userBirthDate = userBirthDate;
 		this.userSex = userSex;
 		this.email = email;
