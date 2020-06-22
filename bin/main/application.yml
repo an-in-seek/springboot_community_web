@@ -11,6 +11,7 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver  
     url: jdbc:h2:mem:test
+    #url: jdbc:h2:file:C:\Java\sts-4.3.1.RELEASE\workspace\spring_boot_community_web\database\h2\h2db
     username: sa
     password: 
   devtools:

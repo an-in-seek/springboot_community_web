@@ -73,6 +73,33 @@ public class User implements Serializable {
 		super();
 	}
 
+	public User(String username, String password, String userNickname, SexType userSex, String email,
+			LocalDateTime createdDate, LocalDateTime updatedDate, Set<Role> roles) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.userNickname = userNickname;
+		this.userSex = userSex;
+		this.email = email;
+		this.createdDate = createdDate;
+		this.updatedDate = updatedDate;
+		this.roles = roles;
+	}
+	
+	public User(String username, String password, String userNickname, String userBirthDate, SexType userSex,
+			String email, LocalDateTime createdDate, LocalDateTime updatedDate, Set<Role> roles) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.userNickname = userNickname;
+		this.userBirthDate = userBirthDate;
+		this.userSex = userSex;
+		this.email = email;
+		this.createdDate = createdDate;
+		this.updatedDate = updatedDate;
+		this.roles = roles;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -167,23 +194,5 @@ public class User implements Serializable {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public User(String username, String password, String userNickname, String userBirthDate, SexType userSex, String email,
-			String pincipal, SocialType socialType, LocalDateTime createdDate, LocalDateTime updatedDate) {
-		this.username = username;
-		this.password = password;
-		this.userNickname = userNickname;
-		this.userBirthDate = userBirthDate;
-		this.userSex = userSex;
-		this.email = email;
-		this.pincipal = pincipal;
-		this.socialType = socialType;
-		this.createdDate = createdDate;
-		this.updatedDate = updatedDate;
 	}
 }
