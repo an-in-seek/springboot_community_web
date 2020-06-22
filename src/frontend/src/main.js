@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import VeeValidate from 'vee-validate';
 import Vuex from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import { faUserSecret, faList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
   faHome,
@@ -16,7 +17,7 @@ import {
   faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
+library.add(faUserSecret, faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faList);
 
 Vue.config.productionTip = false;
 

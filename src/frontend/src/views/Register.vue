@@ -51,7 +51,7 @@
             >{{errors.first('password')}}</div>
           </div>
           <div class="form-group">
-            <button class="btn btn-primary btn-block">Sign Up</button>
+            <button class="btn btn-primary btn-block">가입하기</button>
           </div>
         </div>
       </form>
