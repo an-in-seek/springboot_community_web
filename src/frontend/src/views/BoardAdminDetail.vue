@@ -47,12 +47,11 @@
                         placeholder="내용을 입력하세요."
                         rows="6"
                         max-rows="6"></b-form-textarea>
-                    <pre class="mt-3 mb-0">{{ boardContent }}</pre>
                 </b-form-group>
 
                 <b-row>
-                    <b-col lg="6" class="pb-2"><b-button block size="lg" type="submit" variant="primary">수정</b-button></b-col>
-                    <b-col lg="6" class="pb-2"><b-button block size="lg" type="reset" variant="danger">삭제</b-button></b-col>
+                    <b-col lg="6" class="pb-1"><b-button block size="lg" type="submit" variant="primary">수정</b-button></b-col>
+                    <b-col lg="6" class="pb-1"><b-button block size="lg" type="reset" variant="danger">삭제</b-button></b-col>
                 </b-row>
             </b-form>
         </div>
