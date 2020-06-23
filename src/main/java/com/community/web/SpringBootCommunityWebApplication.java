@@ -63,8 +63,8 @@ public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 			User userInfo = new User(user, password, user, birthDate, SexType.MALE, user + "@gmail.com", nowDateTime, nowDateTime, roles);
 			userRepository.save(userInfo);
 
-			IntStream.rangeClosed(1, 200).forEach(index -> boardRepository.save(new Board("게시글" + index, "순서" + index,
-					"내용" + index, BoardType.free, nowDateTime, nowDateTime, adminInfo)));
+			IntStream.rangeClosed(1, 200).forEach(index -> boardRepository.save(new Board("제목" + index, "부제목" + index,
+					"내용" + index, BoardType.FREE, nowDateTime, nowDateTime, userInfo)));
 		};
 	}
 }

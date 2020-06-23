@@ -5,9 +5,11 @@ import store from './store';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import { BootstrapVue, IconsPlugin, FormPlugin } from 'bootstrap-vue';
 import VeeValidate from 'vee-validate';
 import Vuex from 'vuex';
+import moment from 'moment';
+import VueMomentJS from 'vue-momentjs';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
@@ -27,12 +29,16 @@ Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin);
+// Optionally install the BootstrapVue Form plugin
+Vue.use(FormPlugin)
 // Install VeeValidate
 Vue.use(VeeValidate, {
   fieldsBagName: 'veeFields'
 });
 // Install Vuex
 Vue.use(Vuex);
+// Install VueMoment
+Vue.use(VueMomentJS, moment);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

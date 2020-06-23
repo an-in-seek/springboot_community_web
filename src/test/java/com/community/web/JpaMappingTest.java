@@ -35,7 +35,7 @@ public class JpaMappingTest {
 	private final String boardTitle = "제목";
 	private final String boardSubTitle = "부제목";
 	private final String boardContent = "내용";
-	private final BoardType boardType = BoardType.free;
+	private final BoardType boardType = BoardType.FREE;
 
     @Autowired
     UserRepository userRepository;

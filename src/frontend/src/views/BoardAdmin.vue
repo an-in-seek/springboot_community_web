@@ -6,7 +6,7 @@
         <body>
             <div class="overflow-auto">
                 <b-table 
-                  id="my-table"
+                  id="admin-table"
                   striped="striped" 
                   hover="hover" 
                   :fields="fields" 
@@ -14,7 +14,8 @@
                   :busy="isBusy" 
                   :per-page="perPage"
                   :current-page="currentPage"
-                  caption-top>
+                  caption-top
+                  @row-clicked="rowClick">
                   <template v-slot:table-caption>This is a table caption.</template>
                   <template v-slot:table-busy>
                     <div class="text-center text-danger my-2">
@@ -32,7 +33,7 @@
                     first-number
                     last-number
                     align="center"
-                    aria-controls="my-table"
+                    aria-controls="admin-table"
                   ></b-pagination>
                 </div>
             </div>
@@ -73,6 +74,13 @@ export default {
           error.toString();
       }
     );
+  },
+  methods: {
+    rowClick(item) {
+      this.$router.push({
+        path: `/admin/board/detail/${item.boardNo}`
+      });
+    }
   },
   computed: {
     rows() {

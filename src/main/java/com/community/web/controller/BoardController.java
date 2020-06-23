@@ -43,13 +43,20 @@ public class BoardController {
 
 	@GetMapping("/admin")
 	@PreAuthorize("hasRole('ADMIN')")
-	public Map<String, Object> adminAccess() {
+	public Map<String, Object> adminBoardList() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Board> boardList = boardService.findBoardList();
 		map.put("content", "Admin Board.");
 		map.put("items", boardList);
 		return map;
 	}
+	
+	@GetMapping("/admin/detail")
+	@PreAuthorize("hasRole('ADMIN')")
+    public Board adminBoardDetail(@RequestParam(value = "boardNo", defaultValue = "1") Long boardNo) {
+		Board board = boardService.findBoardByBoardNo(boardNo);
+        return board;
+    }
 	
 	@GetMapping("/admin/list")
     public String list(@PageableDefault Pageable pageable, @SocialUser User user, Model model) {
