@@ -3,6 +3,7 @@ package com.community.web;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -11,8 +12,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.community.web.domain.Board;
 import com.community.web.domain.Role;
 import com.community.web.domain.User;
+import com.community.web.domain.enums.BoardType;
 import com.community.web.domain.enums.ERole;
 import com.community.web.domain.enums.SexType;
 import com.community.web.repository.BoardRepository;
@@ -45,28 +48,23 @@ public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 			// admin 정보 저장
 			Set<Role> roles = new HashSet<>();
 			roles.add(adminRole);
-			User userInfo = new User(admin, password, admin, birthDate, SexType.MALE, admin + "@gmail.com", nowDateTime, nowDateTime, roles);
-			userRepository.save(userInfo);
+			User adminInfo = new User(admin, password, admin, birthDate, SexType.MALE, admin + "@gmail.com", nowDateTime, nowDateTime, roles);
+			userRepository.save(adminInfo);
 
 			// moderator 정보 저장
 			roles = new HashSet<>();
 			roles.add(moderatorRole);
-			userInfo = new User(moderator, password, moderator, birthDate, SexType.MALE, moderator + "@gmail.com", nowDateTime, nowDateTime, roles);
-			userRepository.save(userInfo);
+			User moderatorInfo = new User(moderator, password, moderator, birthDate, SexType.MALE, moderator + "@gmail.com", nowDateTime, nowDateTime, roles);
+			userRepository.save(moderatorInfo);
 
 			// user 정보 저장
 			roles = new HashSet<>();
 			roles.add(userRole);
-			userInfo = new User(user, password, user, birthDate, SexType.MALE, user + "@gmail.com", nowDateTime, nowDateTime, roles);
+			User userInfo = new User(user, password, user, birthDate, SexType.MALE, user + "@gmail.com", nowDateTime, nowDateTime, roles);
 			userRepository.save(userInfo);
 
-			/*
-			 * IntStream.rangeClosed(1, 200).forEach(index ->
-			 * boardRepository.save(Board.builder() .boardTitle("게시글" + index)
-			 * .boardSubTitle("순서" + index) .boardContent("내용") .boardType(BoardType.free)
-			 * .createdDate(LocalDateTime.now()) .updatedDate(LocalDateTime.now())
-			 * .user(user).build()) );
-			 */
+			IntStream.rangeClosed(1, 200).forEach(index -> boardRepository.save(new Board("게시글" + index, "순서" + index,
+					"내용" + index, BoardType.free, nowDateTime, nowDateTime, adminInfo)));
 		};
 	}
 }

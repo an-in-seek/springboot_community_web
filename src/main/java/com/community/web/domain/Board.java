@@ -2,14 +2,21 @@ package com.community.web.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import javax.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import com.community.web.domain.enums.BoardType;
 
-@Getter
-@NoArgsConstructor
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.community.web.domain.enums.BoardType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table
 public class Board implements Serializable {
@@ -40,10 +47,14 @@ public class Board implements Serializable {
 	@Column
 	private LocalDateTime updatedDate;
 
+	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
 	private User user;
 
-	@Builder
+	public Board() {
+		super();
+	}
+	
 	public Board(String boardTitle, String boardSubTitle, String boardContent, BoardType boardType,
 			LocalDateTime createdDate, LocalDateTime updatedDate, User user) {
 		this.boardTitle = boardTitle;
@@ -53,5 +64,73 @@ public class Board implements Serializable {
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
 		this.user = user;
+	}
+
+	public Long getBoardNo() {
+		return boardNo;
+	}
+
+	public void setBoardNo(Long boardNo) {
+		this.boardNo = boardNo;
+	}
+
+	public String getBoardTitle() {
+		return boardTitle;
+	}
+
+	public void setBoardTitle(String boardTitle) {
+		this.boardTitle = boardTitle;
+	}
+
+	public String getBoardSubTitle() {
+		return boardSubTitle;
+	}
+
+	public void setBoardSubTitle(String boardSubTitle) {
+		this.boardSubTitle = boardSubTitle;
+	}
+
+	public String getBoardContent() {
+		return boardContent;
+	}
+
+	public void setBoardContent(String boardContent) {
+		this.boardContent = boardContent;
+	}
+
+	public BoardType getBoardType() {
+		return boardType;
+	}
+
+	public void setBoardType(BoardType boardType) {
+		this.boardType = boardType;
+	}
+
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public LocalDateTime getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(LocalDateTime updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 }

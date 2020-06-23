@@ -1,5 +1,7 @@
 package com.community.web.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,15 @@ public class BoardService {
 	@Autowired
     private BoardRepository boardRepository;
 
+	/**
+     * 게시판 글 목록 조회
+     * @param pageable
+     * @return
+     */
+    public List<Board> findBoardList( ) {
+        return boardRepository.findAll();
+    }
+    
     /**
      * 게시판 글 목록 조회(페이징 처리)
      * @param pageable

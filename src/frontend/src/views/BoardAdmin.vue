@@ -1,9 +1,43 @@
 <template>
-  <div class="container">
-    <header class="jumbotron">
-      <h3>{{content}}</h3>
-    </header>
-  </div>
+    <div class="container">
+        <header class="jumbotron">
+            <h3>{{content}}</h3>
+        </header>
+        <body>
+            <div class="overflow-auto">
+                <b-table 
+                  id="my-table"
+                  striped="striped" 
+                  hover="hover" 
+                  :fields="fields" 
+                  :items="items" 
+                  :busy="isBusy" 
+                  :per-page="perPage"
+                  :current-page="currentPage"
+                  caption-top>
+                  <template v-slot:table-caption>This is a table caption.</template>
+                  <template v-slot:table-busy>
+                    <div class="text-center text-danger my-2">
+                      <b-spinner class="align-middle"></b-spinner>
+                      <strong>Loading...</strong>
+                    </div>
+                  </template>
+                </b-table>
+
+                <div class="mt-3">
+                  <b-pagination
+                    v-model="currentPage"
+                    :total-rows="rows"
+                    :per-page="perPage"
+                    first-number
+                    last-number
+                    align="center"
+                    aria-controls="my-table"
+                  ></b-pagination>
+                </div>
+            </div>
+        </body>
+    </div>
 </template>
 
 <script>
@@ -13,13 +47,24 @@ export default {
   name: 'Admin',
   data() {
     return {
-      content: ''
+      content: '',
+      isBusy: false,
+      fields: [
+        { key: 'boardNo', label: 'NO', sortable: true }, 
+        { key: 'boardTitle', label: '제목', sortable: true }, 
+        { key: 'boardSubTitle', label: '부제목', sortable: true }, 
+        { key: 'boardType', label: '타입', sortable: true }
+      ],
+      items: [],
+      perPage: 10,
+      currentPage: 1
     };
   },
   mounted() {
     UserService.getAdminBoard().then(
       response => {
-        this.content = response.data;
+        this.content = response.data.content;
+        this.items = response.data.items;
       },
       error => {
         this.content =
@@ -28,6 +73,11 @@ export default {
           error.toString();
       }
     );
+  },
+  computed: {
+    rows() {
+      return this.items.length
+    }
   }
 };
 </script>

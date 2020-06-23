@@ -3,6 +3,8 @@ package com.community.web;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,14 +58,15 @@ public class JpaMappingTest {
         userRepository.save(user);
 
         // 게시판 데이터 생성
-        boardRepository.save(Board.builder()
-                .boardTitle(boardTitle)
-                .boardSubTitle(boardSubTitle)
-                .boardContent(boardContent)
-                .boardType(boardType)
-                .createdDate(LocalDateTime.now())
-                .updatedDate(LocalDateTime.now())
-                .user(user).build());
+        Board board = new Board();
+        board.setBoardTitle(boardTitle);
+        board.setBoardSubTitle(boardSubTitle);
+        board.setBoardContent(boardContent);
+        board.setBoardType(boardType);
+        board.setCreatedDate(LocalDateTime.now());
+        board.setUpdatedDate(LocalDateTime.now());
+        board.setUser(user);
+        boardRepository.save(board);
     }
 
     @Test
@@ -76,10 +79,10 @@ public class JpaMappingTest {
         assertThat(user.getUserSex(), is(userSex));
         assertThat(user.getEmail(), is(email));
 
-        Board board = boardRepository.findByUser(user);
-        assertThat(board.getBoardTitle(), is(boardTitle));
-        assertThat(board.getBoardSubTitle(), is(boardSubTitle));
-        assertThat(board.getBoardContent(), is(boardContent));
-        assertThat(board.getBoardType(), is(boardType));
+        List<Board> board = boardRepository.findByUser(user);
+        assertThat(board.get(0).getBoardTitle(), is(boardTitle));
+        assertThat(board.get(0).getBoardSubTitle(), is(boardSubTitle));
+        assertThat(board.get(0).getBoardContent(), is(boardContent));
+        assertThat(board.get(0).getBoardType(), is(boardType));
     }
 }
