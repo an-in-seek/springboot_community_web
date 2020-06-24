@@ -18,6 +18,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Size;
 
 import com.community.web.domain.enums.SexType;
 import com.community.web.domain.enums.SocialType;
@@ -53,6 +54,7 @@ public class User implements Serializable {
 	private String email;
 
 	@Column
+	@Size(max = 4000)
 	private String pincipal;
 
 	@Column

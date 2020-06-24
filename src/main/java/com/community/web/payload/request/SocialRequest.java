@@ -21,6 +21,7 @@ public class SocialRequest {
     @Size(min = 6, max = 40)
     private String password;
     
+    @Size(max = 4000)
     private String pincipal;
     
     private String social_type;
