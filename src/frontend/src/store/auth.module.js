@@ -36,7 +36,19 @@ export const auth = {
           return Promise.reject(error);
         }
       );
-    }
+    },
+    signinwithsns({ commit }, user) {
+      return AuthService.signinwithsns(user).then(
+        user => {
+          commit('loginSuccess', user);
+          return Promise.resolve(user);
+        },
+        error => {
+          commit('loginFailure');
+          return Promise.reject(error);
+        }
+      );
+    } 
   },
   mutations: {
     loginSuccess(state, user) {

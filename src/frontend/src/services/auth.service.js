@@ -18,6 +18,25 @@ class AuthService {
       });
   }
 
+  signinwithsns(snsuser) {
+    return axios
+      .post(API_URL + 'signinwithsns', {
+        username: snsuser.username,
+        password: snsuser.password,
+        email: snsuser.email,
+        user_nickname: snsuser.user_nickname,
+        social_type: snsuser.social_type,
+        pincipal: snsuser.pincipal
+      })
+      .then(response => {
+        if (response.data.accessToken) {
+          localStorage.setItem('user', JSON.stringify(response.data));
+        }
+
+        return response.data;
+      });
+  }  
+
   logout() {
     localStorage.removeItem('user');
   }
