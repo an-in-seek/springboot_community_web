@@ -1,9 +1,16 @@
 <template>
     <div class="container">
+
         <header class="jumbotron">
-            <h3>{{content}}</h3>
+          <h1 class="display-4">{{content}}</h1>
+          <p class="lead">게시판 관리</p>
+          <hr class="my-4">
+              <p>관리자는 모든 게시글을 관리할 수 있습니다.</p>
+              <!--<p class="lead"><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>-->
         </header>
+
         <body>
+            <div class="text-right"><b-button variant="success">글쓰기</b-button></div>
             <div class="overflow-auto">
                 <b-table 
                   id="admin-table"
@@ -16,7 +23,7 @@
                   :current-page="currentPage"
                   caption-top
                   @row-clicked="rowClick">
-                  <template v-slot:table-caption>This is a table caption.</template>
+                  <template v-slot:table-caption>글 목록</template>
                   <template v-slot:table-busy>
                     <div class="text-center text-danger my-2">
                       <b-spinner class="align-middle"></b-spinner>
@@ -38,6 +45,7 @@
                 </div>
             </div>
         </body>
+
     </div>
 </template>
 

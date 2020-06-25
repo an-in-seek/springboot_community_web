@@ -13,4 +13,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	List<Board> findAll();
 	
 	List<Board> findByUser(User user);
+	
+	Board findByBoardNo(Long boardNo);
 }

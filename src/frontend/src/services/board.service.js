@@ -15,6 +15,22 @@ class BoardService {
   getAdminBoardDetail(boardNo) {
     return axios.get(API_URL + 'admin/detail', { headers: authHeader(), params: {boardNo} });
   }
+
+  updateBoard(board) {
+    return axios.post(API_URL + 'admin/update', {
+      boardNo: board.boardNo,
+      boardTitle: board.boardTitle,
+      boardSubTitle: board.boardSubTitle,
+      boardContent: board.boardContent,
+      boardType: board.boardType
+    });
+  }
+
+  deleteBoard(board) {
+    return axios.post(API_URL + 'admin/delete', {
+      boardNo: board.boardNo
+    });
+  }
 }
 
 export default new BoardService();
