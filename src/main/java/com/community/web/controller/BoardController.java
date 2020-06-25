@@ -116,8 +116,7 @@ public class BoardController {
 	@PostMapping("/admin/delete")
 	public ResponseEntity<?> deleteBoard(@Valid @RequestBody BoardRequest boardRequest) {
 		Long boardNo = Long.parseLong(boardRequest.getBoardNo());
-		Board board = boardRepository.findByBoardNo(boardNo);
-		boardRepository.delete(board);
+		boardRepository.delete(boardRepository.findByBoardNo(boardNo));
 		return ResponseEntity.ok(new MessageResponse("Board deleted successfully!"));
 	}
 }
