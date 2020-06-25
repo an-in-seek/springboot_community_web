@@ -54,7 +54,6 @@
             <div class="sns-icon-wrapper">
               <img class="sns-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
             </div>              
-            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
              <b class="sns-btn-text">Sign in with Google</b>
             </div>
           </button>
@@ -67,7 +66,6 @@
             <div class="sns-icon-wrapper">
               <img class="sns-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Kakao_logo.jpg/100px-Kakao_logo.jpg"/>
             </div>              
-            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
              <b class="sns-btn-text">Sign in with KaKao</b>
             </div>
           </button>
@@ -80,7 +78,6 @@
             <div class="sns-icon-wrapper">
               <img class="sns-icon" src="https://image.flaticon.com/icons/svg/174/174848.svg"/>
             </div>              
-            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
              <b class="sns-btn-text">Sign in with FaceBook</b>
             </div>
           </button>
