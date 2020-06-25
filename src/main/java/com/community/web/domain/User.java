@@ -55,7 +55,7 @@ public class User implements Serializable {
 
 	@Column
 	@Size(max = 4000)
-	private String pincipal;
+	private String principal;
 
 	@Column
 	@Enumerated(EnumType.STRING)
@@ -158,12 +158,12 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public String getPincipal() {
-		return pincipal;
+	public String getPrincipal() {
+		return principal;
 	}
 
-	public void setPincipal(String pincipal) {
-		this.pincipal = pincipal;
+	public void setPrincipal(String principal) {
+		this.principal = principal;
 	}
 
 	public SocialType getSocialType() {

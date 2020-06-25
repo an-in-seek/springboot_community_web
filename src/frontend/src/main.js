@@ -42,7 +42,9 @@ Vue.use(Vuex);
 Vue.use(VueMomentJS, moment);
 
 Vue.use(GAuth, {
-  clientId: '418763496685-ek7u44oj3jvbm7tijeakgl1kkf3d4l8m.apps.googleusercontent.com', scope: 'email profile', prompt: 'consent'//, fetch_basic_profile: true
+  clientId: '418763496685-ek7u44oj3jvbm7tijeakgl1kkf3d4l8m.apps.googleusercontent.com',
+  scope: 'email profile',
+  prompt: 'consent'//, fetch_basic_profile: true
 })
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

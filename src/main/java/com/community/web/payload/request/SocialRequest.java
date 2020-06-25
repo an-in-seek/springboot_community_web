@@ -22,19 +22,18 @@ public class SocialRequest {
     private String password;
     
     @Size(max = 4000)
-    private String pincipal;
+    private String principal;
     
     private String social_type;
     
     private String user_nickname;
-        
 
-	public String getPincipal() {
-		return pincipal;
+	public String getPrincipal() {
+		return principal;
 	}
 
-	public void setPincipal(String pincipal) {
-		this.pincipal = pincipal;
+	public void setPrincipal(String principal) {
+		this.principal = principal;
 	}
 
 	public String getSocial_type() {

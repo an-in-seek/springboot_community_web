@@ -26,7 +26,7 @@ class AuthService {
         email: snsuser.email,
         user_nickname: snsuser.user_nickname,
         social_type: snsuser.social_type,
-        pincipal: snsuser.pincipal
+        principal: snsuser.principal
       })
       .then(response => {
         if (response.data.accessToken) {

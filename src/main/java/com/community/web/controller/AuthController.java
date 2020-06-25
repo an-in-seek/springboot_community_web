@@ -162,7 +162,6 @@ public class AuthController {
 												 userDetails.getUsername(), 
 												 userDetails.getEmail(), 
 												 roles));		
-
 	}	
 
 	public ResponseEntity<?> registerUserSNS(SocialRequest socialRequest) {
@@ -197,7 +196,7 @@ public class AuthController {
 		user.setUsername(socialRequest.getUsername());
 		user.setPassword(encoder.encode(socialRequest.getPassword()));
 		user.setEmail(socialRequest.getEmail());
-		user.setPincipal(socialRequest.getPincipal());
+		user.setPrincipal(socialRequest.getPrincipal());
 		user.setUserNickname(socialRequest.getUser_nickname());
 		user.setSocialType(socialtype);
 		user.setCreatedDate(LocalDateTime.now());

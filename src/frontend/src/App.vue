@@ -10,12 +10,12 @@
                 </li>
                 <li v-if="showAdminBoard" class="nav-item">
                     <router-link to="/admin" class="nav-link">
-                        <font-awesome-icon icon="list"/> 관리자 게시판
+                        <font-awesome-icon icon="list"/> 게시판 관리
                     </router-link>
                 </li>
                 <li v-if="showModeratorBoard" class="nav-item">
                     <router-link to="/mod" class="nav-link">
-                        <font-awesome-icon icon="list"/> 운영자 게시판
+                        <font-awesome-icon icon="list"/> 게시판 관리
                     </router-link>
                 </li>
                 <li class="nav-item">
