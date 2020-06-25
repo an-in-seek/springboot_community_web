@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +35,7 @@ import com.community.web.repository.RoleRepository;
 import com.community.web.repository.UserRepository;
 import com.community.web.security.jwt.JwtUtils;
 import com.community.web.security.service.UserDetailsImpl;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -56,11 +58,28 @@ public class AuthController {
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
+		
+		
+		
 		if (!userRepository.existsByUsername(loginRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Please check your ID and Password!"));
+		}
+				
+		User userinfo = userRepository.findByUsername(loginRequest.getUsername()).get();
+		
+		if (!encoder.matches(loginRequest.getPassword(), userinfo.getPassword())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Please check your ID and Password!"));	
+		}
+		
+		
+		if (!StringUtils.isEmpty(userinfo.getSocialType())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: It is already registered as a social ID!"));			
 		}
 		
 		Authentication authentication = authenticationManager.authenticate(
@@ -98,6 +117,7 @@ public class AuthController {
 		// Create new user's account
 		User user = new User();
 		user.setUsername(signUpRequest.getUsername());
+		//user.setPassword(encoder.encode(signUpRequest.getPassword()));
 		user.setPassword(encoder.encode(signUpRequest.getPassword()));
 		user.setEmail(signUpRequest.getEmail());	
 		user.setCreatedDate(LocalDateTime.now());

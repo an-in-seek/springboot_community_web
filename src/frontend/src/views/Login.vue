@@ -145,8 +145,8 @@ export default {
 
           console.log(GoogleUser);
 
-          this.snsuser.username = GoogleUser.getBasicProfile().getId();
-          this.snsuser.password = GoogleUser.getBasicProfile().getId();
+          this.snsuser.username = GoogleUser.getBasicProfile().getEmail();
+          this.snsuser.password = GoogleUser.getBasicProfile().getEmail();
           this.snsuser.email = GoogleUser.getBasicProfile().getEmail();
           this.snsuser.principal = GoogleUser.getAuthResponse().id_token;
           this.snsuser.user_nickname = GoogleUser.getBasicProfile().getGivenName() + GoogleUser.getBasicProfile().getFamilyName();
