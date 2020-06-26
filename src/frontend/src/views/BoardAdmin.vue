@@ -1,11 +1,13 @@
 <template>
     <div class="container">
         <header class="jumbotron">
-          <h1 class="display-4">{{content}}</h1>
-          <!--<p class="lead">게시판 관리</p>-->
+          <h2>{{content}}</h2>
+          <!--
+          <p class="lead">게시판 관리</p>
           <hr class="my-4">
               <p>관리자는 모든 게시글을 관리할 수 있습니다.</p>
-              <!--<p class="lead"><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>-->
+              <p class="lead"><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+          -->
         </header>
         <body>
             <div class="text-right"><b-button variant="success" @click="handleRegister">글쓰기</b-button></div>
