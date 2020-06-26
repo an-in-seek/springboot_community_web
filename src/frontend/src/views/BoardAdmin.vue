@@ -10,7 +10,39 @@
           -->
         </header>
         <body>
-            <div class="text-right"><b-button variant="success" @click="handleRegister">글쓰기</b-button></div>
+            <b-row>
+              <b-col lg="2" class="my-1">
+                  <b-form-group class="mb-0">
+                    <b-form-select
+                        v-model="filterOn"
+                        :options="filterOptions">
+                      <template v-slot:first>
+                          <option value="">전체</option>
+                      </template>
+                    </b-form-select>
+                  </b-form-group>
+              </b-col>
+
+              <b-col lg="8" class="my-1">
+                  <b-form-group label-for="filterInput" class="mb-0">
+                      <b-input-group>
+                          <b-form-input
+                              v-model="filter"
+                              type="search"
+                              id="filterInput"
+                              placeholder="검색 키워드를 입력하세요."></b-form-input>
+                          <b-input-group-append>
+                              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+                          </b-input-group-append>
+                      </b-input-group>
+                  </b-form-group>
+              </b-col>
+
+              <b-col lg="2" class="my-1">
+                  <b-button block="block" variant="success" @click="handleRegister">글쓰기</b-button>
+              </b-col>
+            </b-row>
+            
             <div class="overflow-auto">
                 <b-table 
                   id="admin-table"
@@ -21,7 +53,10 @@
                   :busy="isBusy" 
                   :per-page="perPage"
                   :current-page="currentPage"
+                  :filter="filter"
+                  :filterIncludedFields="filterOn"
                   caption-top
+                  @filtered="onFiltered"
                   @row-clicked="rowClick">
                   <template v-slot:table-caption>글 목록</template>
                   <template v-slot:table-busy>
@@ -65,7 +100,9 @@ export default {
       ],
       items: [],
       perPage: 10,
-      currentPage: 1
+      currentPage: 1,
+      filter: null,
+      filterOn: ''
     };
   },
   mounted() {
@@ -73,6 +110,7 @@ export default {
       response => {
         this.content = response.data.content;
         this.items = response.data.items;
+        this.totalRows = response.data.items.length;
       },
       error => {
         this.content =
@@ -93,11 +131,22 @@ export default {
       this.$router.push({
         path: `/admin/board/detail`
       });
+    },
+    onFiltered(filteredItems) {
+      this.totalRows = filteredItems.length
+      this.currentPage = 1
     }
   },
   computed: {
     rows() {
-      return this.items.length
+      return this.totalRows
+    },
+    filterOptions() {
+      return this.fields
+        .filter(f => f.sortable)
+        .map(f => {
+          return { text: f.label, value: f.key }
+        })
     }
   }
 };
