@@ -16,19 +16,35 @@ class BoardService {
     return axios.get(API_URL + 'admin/detail', { headers: authHeader(), params: {boardNo} });
   }
 
+  createBoard(board) {
+    return axios.post(API_URL + 'admin/create', {
+      boardNo: board.boardNo,
+      boardTitle: board.boardTitle,
+      boardSubTitle: board.boardSubTitle,
+      boardType: board.boardType,
+      boardContent: board.boardContent
+    }, {
+      headers: authHeader()
+    });
+  }
+
   updateBoard(board) {
     return axios.post(API_URL + 'admin/update', {
       boardNo: board.boardNo,
       boardTitle: board.boardTitle,
       boardSubTitle: board.boardSubTitle,
-      boardContent: board.boardContent,
-      boardType: board.boardType
+      boardType: board.boardType,
+      boardContent: board.boardContent
+    }, {
+      headers: authHeader()
     });
   }
 
   deleteBoard(board) {
     return axios.post(API_URL + 'admin/delete', {
       boardNo: board.boardNo
+    }, {
+      headers: authHeader()
     });
   }
 }

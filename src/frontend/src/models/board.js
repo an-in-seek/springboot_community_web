@@ -1,11 +1,11 @@
 export default class Board {
-    constructor(boardNo, boardTitle, boardSubTitle, boardContent, boardType, userId) {
+    constructor(boardNo, username, boardTitle, boardSubTitle, boardContent, boardType) {
       this.boardNo = boardNo;
+      this.username = username;
       this.boardTitle = boardTitle;
       this.boardSubTitle = boardSubTitle;
       this.boardContent = boardContent;
       this.boardType = boardType;
-      this.userId = userId;
     }
   }
   

@@ -1,16 +1,14 @@
 <template>
     <div class="container">
-
         <header class="jumbotron">
           <h1 class="display-4">{{content}}</h1>
-          <p class="lead">게시판 관리</p>
+          <!--<p class="lead">게시판 관리</p>-->
           <hr class="my-4">
               <p>관리자는 모든 게시글을 관리할 수 있습니다.</p>
               <!--<p class="lead"><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>-->
         </header>
-
         <body>
-            <div class="text-right"><b-button variant="success">글쓰기</b-button></div>
+            <div class="text-right"><b-button variant="success" @click="handleRegister">글쓰기</b-button></div>
             <div class="overflow-auto">
                 <b-table 
                   id="admin-table"
@@ -31,7 +29,6 @@
                     </div>
                   </template>
                 </b-table>
-
                 <div class="mt-3">
                   <b-pagination
                     v-model="currentPage"
@@ -45,7 +42,6 @@
                 </div>
             </div>
         </body>
-
     </div>
 </template>
 
@@ -87,6 +83,12 @@ export default {
     rowClick(item) {
       this.$router.push({
         path: `/admin/board/detail/${item.boardNo}`
+      });
+    },
+    handleRegister(evt){
+      evt.preventDefault();
+      this.$router.push({
+        path: `/admin/board/detail`
       });
     }
   },

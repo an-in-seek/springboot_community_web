@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.community.web.domain.Board;
+import com.community.web.domain.User;
 import com.community.web.domain.enums.BoardType;
 import com.community.web.payload.request.BoardRequest;
 import com.community.web.payload.response.MessageResponse;
 import com.community.web.repository.BoardRepository;
+import com.community.web.repository.UserRepository;
 import com.community.web.service.BoardService;
 
 
@@ -36,6 +39,9 @@ public class BoardController {
 	
 	@Autowired
 	private BoardRepository boardRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 
 	/**
 	 * 사용자 게시판
@@ -82,6 +88,41 @@ public class BoardController {
 		Board board = boardService.findBoardByBoardNo(boardNo);
         return board;
     }
+	
+	/**
+	 * 관리자 게시판 등록
+	 * @param boardRequest
+	 * @return
+	 */
+	@PostMapping("/admin/create")
+	public ResponseEntity<?> createBoard(@RequestBody BoardRequest boardRequest) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		User user = userRepository.findByUsername(username).get();
+		if(user == null) {
+			return ResponseEntity.ok(new MessageResponse("Board created fail!"));
+		}
+		
+		BoardType boardTye = null;
+		if(boardRequest.getBoardType().equals(BoardType.FREE.name())) {
+			boardTye = BoardType.FREE;
+		} else if(boardRequest.getBoardType().equals(BoardType.NOTICE.name())) {
+			boardTye = BoardType.NOTICE;
+		}
+		if(boardTye == null) {
+			return ResponseEntity.ok(new MessageResponse("Board created fail!"));
+		}
+		
+		Board board = new Board();
+		board.setUser(user);
+		board.setBoardTitle(boardRequest.getBoardTitle());
+		board.setBoardSubTitle(boardRequest.getBoardSubTitle());
+		board.setBoardContent(boardRequest.getBoardContent());	
+		board.setBoardType(boardTye);
+		board.setCreatedDate(LocalDateTime.now());
+		boardRepository.save(board);
+		
+		return ResponseEntity.ok(new MessageResponse("Board created successfully!"));
+	}
 	
 	/**
 	 * 관리자 게시판 수정

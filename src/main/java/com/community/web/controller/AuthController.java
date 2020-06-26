@@ -58,9 +58,6 @@ public class AuthController {
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		
-		
-		
 		if (!userRepository.existsByUsername(loginRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
@@ -68,13 +65,11 @@ public class AuthController {
 		}
 				
 		User userinfo = userRepository.findByUsername(loginRequest.getUsername()).get();
-		
 		if (!encoder.matches(loginRequest.getPassword(), userinfo.getPassword())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Please check your ID and Password!"));	
 		}
-		
 		
 		if (!StringUtils.isEmpty(userinfo.getSocialType())) {
 			return ResponseEntity

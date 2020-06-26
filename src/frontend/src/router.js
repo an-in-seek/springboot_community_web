@@ -39,6 +39,12 @@ export const router = new Router({
       component: () => import('./views/BoardAdmin.vue')
     },
     {
+      path: '/admin/board/detail',
+      name: 'adminBoardDetailNewRegister',
+      // lazy-loaded
+      component: () => import('./views/BoardAdminDetail.vue')
+    },
+    {
       path: '/admin/board/detail/:boardNo',
       name: 'adminBoardDetail',
       // lazy-loaded
