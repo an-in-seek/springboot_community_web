@@ -17,7 +17,7 @@ class BoardService {
   }
 
   createBoard(board) {
-    return axios.post(API_URL + 'admin/create', {
+    return axios.post(API_URL + 'create', {
       boardNo: board.boardNo,
       boardTitle: board.boardTitle,
       boardSubTitle: board.boardSubTitle,
@@ -29,7 +29,7 @@ class BoardService {
   }
 
   updateBoard(board) {
-    return axios.post(API_URL + 'admin/update', {
+    return axios.post(API_URL + 'update', {
       boardNo: board.boardNo,
       boardTitle: board.boardTitle,
       boardSubTitle: board.boardSubTitle,
@@ -41,7 +41,7 @@ class BoardService {
   }
 
   deleteBoard(board) {
-    return axios.post(API_URL + 'admin/delete', {
+    return axios.post(API_URL + 'delete', {
       boardNo: board.boardNo
     }, {
       headers: authHeader()

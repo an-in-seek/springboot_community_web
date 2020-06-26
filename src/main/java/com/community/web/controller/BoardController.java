@@ -49,9 +49,25 @@ public class BoardController {
 	 */
 	@GetMapping("/user")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public String userAccess() {
-		return "User Content.";
+	public Map<String, Object> userBoardList() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Board> boardList = boardService.findBoardList();
+		map.put("content", "User Board.");
+		map.put("items", boardList);
+		return map;
 	}
+	
+	/**
+	 * 사용자 게시판 세부
+	 * @param boardNo
+	 * @return
+	 */
+	@GetMapping("/user/detail")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public Board userBoardDetail(@RequestParam(value = "boardNo", defaultValue = "1") Long boardNo) {
+		Board board = boardService.findBoardByBoardNo(boardNo);
+        return board;
+    }
 	
 	/**
 	 * 운영자 게시판
@@ -90,11 +106,11 @@ public class BoardController {
     }
 	
 	/**
-	 * 관리자 게시판 등록
+	 * 게시판 등록
 	 * @param boardRequest
 	 * @return
 	 */
-	@PostMapping("/admin/create")
+	@PostMapping("/create")
 	public ResponseEntity<?> createBoard(@RequestBody BoardRequest boardRequest) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userRepository.findByUsername(username).get();
@@ -125,11 +141,11 @@ public class BoardController {
 	}
 	
 	/**
-	 * 관리자 게시판 수정
+	 * 게시판 수정
 	 * @param boardRequest
 	 * @return
 	 */
-	@PostMapping("/admin/update")
+	@PostMapping("/update")
 	public ResponseEntity<?> updateBoard(@Valid @RequestBody BoardRequest boardRequest) {
 		Long boardNo = Long.parseLong(boardRequest.getBoardNo());
 		
@@ -150,11 +166,11 @@ public class BoardController {
 	}
 	
 	/**
-	 * 관리자 게시판 삭제
+	 * 게시판 삭제
 	 * @param boardRequest
 	 * @return
 	 */
-	@PostMapping("/admin/delete")
+	@PostMapping("/delete")
 	public ResponseEntity<?> deleteBoard(@Valid @RequestBody BoardRequest boardRequest) {
 		Long boardNo = Long.parseLong(boardRequest.getBoardNo());
 		boardRepository.delete(boardRepository.findByBoardNo(boardNo));
