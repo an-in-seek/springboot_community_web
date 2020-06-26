@@ -1,45 +1,46 @@
 <template>
     <div class="col-md-12">
         <div class="card card-container">
-            <b-form v-if="show">
-                <b-form-group id="input-group-0" label="번호:" label-for="boardNo">
+            <b-form v-if="showMainForm">
+                <b-form-group id="boardNoGroup" :label="lblBoardNoGroup" label-for="boardNo">
                     <b-form-input
                         id="boardNo"
                         v-model="board.boardNo"
-                        required="required"></b-form-input>
+                        readonly
+                        ></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-1" label="작성자:" label-for="username">
+                <b-form-group id="usernameGroup" :label="lblUsernameGroup" label-for="username">
                     <b-form-input
                         id="username"
                         v-model="board.username"
-                        required="required"></b-form-input>
+                        readonly></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-2" label="작성일:" label-for="createdDate">
+                <b-form-group id="createdDateGroup" :label="lblCreatedDateGroup" label-for="createdDate">
                     <b-form-input
                         id="createdDate"
                         v-model="board.createdDate"
-                        required="required"></b-form-input>
+                        readonly></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-3" label="제목:" label-for="boardTitle">
+                <b-form-group id="boardTitleGroup" :label="lblBoardTitleGroup" label-for="boardTitle">
                     <b-form-input
                         id="boardTitle"
                         v-model="board.boardTitle"
                         required="required"
-                        placeholder="제목을 입력하세요."></b-form-input>
+                        :placeholder="phBoardTitle"></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-4" label="부제목:" label-for="boardSubTitle">
+                <b-form-group id="boardSubTitleGroup" :label="lblBoardSubTitleGroup" label-for="boardSubTitle">
                     <b-form-input
                         id="boardSubTitle"
                         v-model="board.boardSubTitle"
                         required="required"
-                        placeholder="부제목을 입력하세요."></b-form-input>
+                        :placeholder="phBoardSubTitle"></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-5" label="타입:" label-for="boardType">
+                <b-form-group id="boardTypeGroup" :label="lblBoardTypeGroup" label-for="boardType">
                     <b-form-select
                         id="boardType"
                         v-model="board.boardType"
@@ -47,18 +48,25 @@
                         required="required"></b-form-select>
                 </b-form-group>
 
-                <b-form-group id="input-group-6" label="내용:" label-for="boardContent">
+                <b-form-group id="boardContentGroup" :label="lblBoardContentGroup" label-for="boardContent">
                     <b-form-textarea
                         id="boardContent"
                         v-model="board.boardContent"
-                        placeholder="내용을 입력하세요."
+                        :placeholder="phBoardContent"
                         rows="6"
                         max-rows="6"></b-form-textarea>
                 </b-form-group>
 
                 <b-row>
-                    <b-col lg="6" class="pb-1"><b-button block size="lg" type="submit" variant="primary" @click="handleUpdate">수정</b-button></b-col>
-                    <b-col lg="6" class="pb-1"><b-button block size="lg" type="reset" variant="danger" @click="handleDelete">삭제</b-button></b-col>
+                    <b-col lg="6" class="pb-1" v-if="showCreateButton">
+                        <b-button block size="lg" type="submit" variant="primary" @click="handleCreate">{{btnCreate}}</b-button>
+                    </b-col>
+                    <b-col lg="6" class="pb-1" v-if="showUpdateButton">
+                        <b-button block size="lg" type="submit" variant="primary" @click="handleUpdate">{{btnUpdate}}</b-button>
+                    </b-col>
+                    <b-col lg="6" class="pb-1">
+                        <b-button block size="lg" type="reset" variant="danger" @click="handleDelete">{{btnDelete}}</b-button>
+                    </b-col>
                 </b-row>
             </b-form>
         </div>
@@ -68,12 +76,36 @@
 <script>
     import Board from '../models/board';
     import BoardService from '../services/board.service';
+    import CommonUtil from '../util/common-util';
 
     export default {
         name: 'adminBoardDetail',
         data() {
             return {
+                // show 상태값
+                showMainForm: true,
+                showCreateButton: true,
+                showUpdateButton: true,
+
+                // To Do: 추후 DB에서 다국어 값으로 가져오는 방법으로 변경 필요
+                lblBoardNoGroup: '번호:',
+                lblUsernameGroup: '작성자:',
+                lblCreatedDateGroup: '작성일:',
+                lblBoardTitleGroup: '제목:',
+                lblBoardSubTitleGroup: '부제목:',
+                lblBoardTypeGroup: '타입:',
+                lblBoardContentGroup: '내용:',
+                phBoardTitle: '제목을 입력하세요.',
+                phBoardSubTitle: '부제목을 입력하세요.',
+                phBoardContent: '내용을 입력하세요.',
+                btnCreate: '등록',
+                btnUpdate: '수정',
+                btnDelete: '삭제',
+
+                // 데이터 세팅
                 board: new Board('', '', ''),
+
+                // To Do: 추후 DB에서 코드 데이터로 가져오는 방법으로 변경 필요
                 boardTypes: [
                     {
                         text: '타입을 선택해주세요.',
@@ -87,21 +119,67 @@
                         text: '자유게시판',
                         value: 'FREE'
                     }
-                ],
-                show: true
+                ]
             };
         },
+        mounted() {
+            const boardNo = Number(this.$route.params.boardNo);
+            if(boardNo){
+                // Update
+                this.showCreateButton = false;
+                this.showUpdateButton = true;
+                BoardService.getAdminBoardDetail(boardNo).then(response => {
+                    this.board.boardNo = response.data.boardNo;
+                    this.board.username = CommonUtil.isEmpty(response.data.user) ? '' : response.data.user.username;
+                    this.board.createdDate = this.$moment(response.data.createdDate).format('YYYY-MM-DD HH:MM:SS');
+                    this.board.boardTitle = response.data.boardTitle;
+                    this.board.boardSubTitle = response.data.boardSubTitle;
+                    this.board.boardType = response.data.boardType;
+                    this.board.boardContent = response.data.boardContent;
+                }, error => {
+                    this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
+                });
+            } else {
+                // Create
+                this.showCreateButton = true;
+                this.showUpdateButton = false;
+                const username = this.$store.state.auth.user.username;
+                const nowDate = new Date();
+                this.board.boardNo = null;
+                this.board.username = username;
+                this.board.createdDate = this.$moment(nowDate).format('YYYY-MM-DD HH:MM:SS');
+                this.board.boardTitle = null;
+                this.board.boardSubTitle = null;
+                this.board.boardType = null;
+                this.board.boardContent = null;
+            }
+        },
         methods: {
+            // 등록
+            handleCreate(evt) {
+                evt.preventDefault()
+                BoardService
+                    .createBoard(this.board)
+                    .then(response => {
+                        alert(response.data.message);
+                        this.$router.push({ path: '/admin' });
+                    }, error => {
+                        this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
+                    });
+            },
+            // 수정
             handleUpdate(evt) {
                 evt.preventDefault()
                 BoardService
                     .updateBoard(this.board)
                     .then(response => {
                         alert(response.data.message);
+                        this.$router.push({ path: '/admin' });
                     }, error => {
                         this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
                     });
             },
+            // 삭제
             handleDelete(evt) {
                 evt.preventDefault()
                 BoardService
@@ -113,22 +191,6 @@
                         this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
                     });
             }
-        },
-        mounted() {
-            const boardNo = Number(this.$route.params.boardNo);
-            BoardService
-                .getAdminBoardDetail(boardNo)
-                .then(response => {
-                    this.board.boardNo = response.data.boardNo;
-                    this.board.boardTitle = response.data.boardTitle;
-                    this.board.boardSubTitle = response.data.boardSubTitle;
-                    this.board.boardType = response.data.boardType;
-                    this.board.boardContent = response.data.boardContent;
-                    this.board.createdDate = this.$moment(response.data.createdDate).format('YYYY-MM-DD HH:MM:SS');
-                    this.board.username = response.data.user.username;
-                }, error => {
-                    this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
-                });
         }
     };
 </script>
