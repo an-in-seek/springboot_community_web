@@ -58,13 +58,13 @@
                 </b-form-group>
 
                 <b-row>
-                    <b-col lg="6" class="pb-1" v-if="showCreateButton">
+                    <b-col lg="12" class="pb-1" v-if="showCreateButton">
                         <b-button block size="lg" type="submit" variant="primary" @click="handleCreate">{{btnCreate}}</b-button>
                     </b-col>
                     <b-col lg="6" class="pb-1" v-if="showUpdateButton">
                         <b-button block size="lg" type="submit" variant="primary" @click="handleUpdate">{{btnUpdate}}</b-button>
                     </b-col>
-                    <b-col lg="6" class="pb-1">
+                    <b-col lg="6" class="pb-1" v-if="showDeleteButton">
                         <b-button block size="lg" type="reset" variant="danger" @click="handleDelete">{{btnDelete}}</b-button>
                     </b-col>
                 </b-row>
@@ -86,6 +86,7 @@
                 showMainForm: true,
                 showCreateButton: true,
                 showUpdateButton: true,
+                showDeleteButton: true,
 
                 // To Do: 추후 DB에서 다국어 값으로 가져오는 방법으로 변경 필요
                 lblBoardNoGroup: '번호:',
@@ -128,6 +129,7 @@
                 // Update
                 this.showCreateButton = false;
                 this.showUpdateButton = true;
+                this.showDeleteButton = true;
                 BoardService.getAdminBoardDetail(boardNo).then(response => {
                     this.board.boardNo = response.data.boardNo;
                     this.board.username = CommonUtil.isEmpty(response.data.user) ? '' : response.data.user.username;
@@ -143,6 +145,7 @@
                 // Create
                 this.showCreateButton = true;
                 this.showUpdateButton = false;
+                this.showDeleteButton = false;
                 const username = this.$store.state.auth.user.username;
                 const nowDate = new Date();
                 this.board.boardNo = null;
