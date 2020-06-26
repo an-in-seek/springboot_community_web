@@ -27,34 +27,38 @@
                 <b-form-group id="boardTitleGroup" :label="lblBoardTitleGroup" label-for="boardTitle">
                     <b-form-input
                         id="boardTitle"
-                        v-model="board.boardTitle"
                         required="required"
-                        :placeholder="phBoardTitle"></b-form-input>
+                        v-model="board.boardTitle"
+                        :placeholder="phBoardTitle"
+                        :readonly="formReadonly"></b-form-input>
                 </b-form-group>
 
                 <b-form-group id="boardSubTitleGroup" :label="lblBoardSubTitleGroup" label-for="boardSubTitle">
                     <b-form-input
                         id="boardSubTitle"
-                        v-model="board.boardSubTitle"
                         required="required"
-                        :placeholder="phBoardSubTitle"></b-form-input>
+                        v-model="board.boardSubTitle"
+                        :placeholder="phBoardSubTitle"
+                        :readonly="formReadonly"></b-form-input>
                 </b-form-group>
 
                 <b-form-group id="boardTypeGroup" :label="lblBoardTypeGroup" label-for="boardType">
                     <b-form-select
                         id="boardType"
+                        required="required"
                         v-model="board.boardType"
                         :options="boardTypes"
-                        required="required"></b-form-select>
+                        disabled></b-form-select>
                 </b-form-group>
 
                 <b-form-group id="boardContentGroup" :label="lblBoardContentGroup" label-for="boardContent">
                     <b-form-textarea
                         id="boardContent"
+                        rows="6"
+                        max-rows="6"
                         v-model="board.boardContent"
                         :placeholder="phBoardContent"
-                        rows="6"
-                        max-rows="6"></b-form-textarea>
+                        :readonly="formReadonly"></b-form-textarea>
                 </b-form-group>
 
                 <b-row>
@@ -79,7 +83,7 @@
     import CommonUtil from '../util/common-util';
 
     export default {
-        name: 'adminBoardDetail',
+        name: 'userBoardDetail',
         data() {
             return {
                 // show 상태값
@@ -87,6 +91,7 @@
                 showCreateButton: true,
                 showUpdateButton: true,
                 showDeleteButton: true,
+                formReadonly: true,
 
                 // To Do: 추후 DB에서 다국어 값으로 가져오는 방법으로 변경 필요
                 lblBoardNoGroup: '번호:',
@@ -109,14 +114,6 @@
                 // To Do: 추후 DB에서 코드 데이터로 가져오는 방법으로 변경 필요
                 boardTypes: [
                     {
-                        text: '타입을 선택해주세요.',
-                        value: null
-                    },
-                    {
-                        text: '공지사항',
-                        value: 'NOTICE'
-                    },
-                    {
                         text: '자유게시판',
                         value: 'FREE'
                     }
@@ -124,6 +121,7 @@
             };
         },
         mounted() {
+            this.formReadonly = false;
             this.showCreateButton = false;
             this.showUpdateButton = false;
             this.showDeleteButton = false;
@@ -131,11 +129,15 @@
             const boardNo = Number(this.$route.params.boardNo);
             if(boardNo){
                 // 수정
-                this.showUpdateButton = true;
-                this.showDeleteButton = true;
-                BoardService.getAdminBoardDetail(boardNo).then(response => {
+                BoardService.getUserBoardDetail(boardNo).then(response => {
                     this.board.boardNo = response.data.boardNo;
                     this.board.username = CommonUtil.isEmpty(response.data.user) ? '' : response.data.user.username;
+                    if(storeUsername == this.board.username){
+                        this.showUpdateButton = true;
+                        this.showDeleteButton = true;
+                    } else {
+                        this.formReadonly = true;
+                    }
                     this.board.createdDate = this.$moment(response.data.createdDate).format('YYYY-MM-DD HH:MM:SS');
                     this.board.boardTitle = response.data.boardTitle;
                     this.board.boardSubTitle = response.data.boardSubTitle;
@@ -152,7 +154,7 @@
                 this.board.createdDate = this.$moment(new Date()).format('YYYY-MM-DD HH:MM:SS');
                 this.board.boardTitle = null;
                 this.board.boardSubTitle = null;
-                this.board.boardType = null;
+                this.board.boardType = 'FREE';
                 this.board.boardContent = null;
             }
         },
@@ -164,7 +166,7 @@
                     .createBoard(this.board)
                     .then(response => {
                         alert(response.data.message);
-                        this.$router.push({ path: '/admin' });
+                        this.$router.push({ path: '/user' });
                     }, error => {
                         this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
                     });
@@ -176,7 +178,7 @@
                     .updateBoard(this.board)
                     .then(response => {
                         alert(response.data.message);
-                        this.$router.push({ path: '/admin' });
+                        this.$router.push({ path: '/user' });
                     }, error => {
                         this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
                     });
@@ -188,7 +190,7 @@
                     .deleteBoard(this.board)
                     .then(response => {
                         alert(response.data.message);
-                        this.$router.push({ path: '/admin' });
+                        this.$router.push({ path: '/user' });
                     }, error => {
                         this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
                     });

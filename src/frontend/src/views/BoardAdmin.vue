@@ -60,7 +60,8 @@ export default {
         { key: 'boardNo', label: 'NO', sortable: true }, 
         { key: 'boardTitle', label: '제목', sortable: true }, 
         { key: 'boardSubTitle', label: '부제목', sortable: true }, 
-        { key: 'boardType', label: '타입', sortable: true }
+        { key: 'boardType', label: '타입', sortable: true },
+        { key: 'user.username', label: '작성자', sortable: true }
       ],
       items: [],
       perPage: 10,
