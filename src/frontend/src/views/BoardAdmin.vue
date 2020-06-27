@@ -2,22 +2,18 @@
     <div class="container">
         <header class="jumbotron">
           <h2>{{content}}</h2>
-          <!--
-          <p class="lead">게시판 관리</p>
+          <p class="lead">관리자 게시판</p>
           <hr class="my-4">
-              <p>관리자는 모든 게시글을 관리할 수 있습니다.</p>
-              <p class="lead"><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
-          -->
+          <p>관리자는 모든 게시글을 관리할 수 있습니다.</p>
+          <p class="lead"><b-button variant="success" size="lg" @click="handleRegister">글쓰기</b-button></p>
         </header>
         <body>
             <b-row>
               <b-col lg="2" class="my-1">
                   <b-form-group class="mb-0">
-                    <b-form-select
-                        v-model="filterOn"
-                        :options="filterOptions">
+                    <b-form-select v-model="selected" :options="filterOptions">
                       <template v-slot:first>
-                          <option value="">전체</option>
+                          <option value=null>전체</option>
                       </template>
                     </b-form-select>
                   </b-form-group>
@@ -39,7 +35,7 @@
               </b-col>
 
               <b-col lg="2" class="my-1">
-                  <b-button block="block" variant="success" @click="handleRegister">글쓰기</b-button>
+                  <b-button block="block" variant="primary" @click="handleSearch">서버조회</b-button>
               </b-col>
             </b-row>
             
@@ -54,7 +50,7 @@
                   :per-page="perPage"
                   :current-page="currentPage"
                   :filter="filter"
-                  :filterIncludedFields="filterOn"
+                  :filterIncludedFields="selected"
                   caption-top
                   @filtered="onFiltered"
                   @row-clicked="rowClick">
@@ -99,10 +95,11 @@ export default {
         { key: 'user.username', label: '작성자', sortable: true }
       ],
       items: [],
+      totalRows: 0,
       perPage: 10,
       currentPage: 1,
       filter: null,
-      filterOn: ''
+      selected: null
     };
   },
   mounted() {
@@ -121,6 +118,10 @@ export default {
     );
   },
   methods: {
+    onFiltered(filteredItems) {
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
+    },
     rowClick(item) {
       this.$router.push({
         path: `/admin/board/detail/${item.boardNo}`
@@ -132,20 +133,31 @@ export default {
         path: `/admin/board/detail`
       });
     },
-    onFiltered(filteredItems) {
-      this.totalRows = filteredItems.length
-      this.currentPage = 1
+    handleSearch(evt){
+      evt.preventDefault();
+      UserService.getAdminBoard().then(
+        response => {
+          this.items = response.data.items;
+          this.totalRows = response.data.items.length;
+        },
+        error => {
+          this.content =
+            (error.response && error.response.data.message) ||
+            error.message ||
+            error.toString();
+        }
+      );
     }
   },
   computed: {
     rows() {
-      return this.totalRows
+      return this.totalRows;
     },
     filterOptions() {
       return this.fields
         .filter(f => f.sortable)
         .map(f => {
-          return { text: f.label, value: f.key }
+          return { text: f.label, value: f.key };
         })
     }
   }

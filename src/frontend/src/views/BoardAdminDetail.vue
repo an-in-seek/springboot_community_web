@@ -200,11 +200,11 @@
 <style scoped>
 label {
   display: block;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .card-container.card {
-  padding: 40px 40px;
+  padding: 20px 20px;
 }
 
 .card {
