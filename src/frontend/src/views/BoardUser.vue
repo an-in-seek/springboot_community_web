@@ -135,7 +135,7 @@ export default {
     },
     handleSearch(evt){
       evt.preventDefault();
-      UserService.getAdminBoard().then(
+      UserService.getUserBoard().then(
         response => {
           this.items = response.data.items;
           this.totalRows = response.data.items.length;
