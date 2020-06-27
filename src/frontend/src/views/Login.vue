@@ -54,19 +54,19 @@
             <div class="sns-icon-wrapper">
               <img class="sns-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
             </div>              
-             <b class="sns-btn-text">Sign in with Google</b>
+             <b class="sns-btn-text">로그인</b>
             </div>
           </button>
         </div>  
       </form>    
       <form name="form" @submit.prevent="handleLoginwithKaKao">
         <div class="form-group">
-          <button class="btn btn-primary btn-block" :disabled="loading">
+          <button id="kakaologinbtn" class="btn btn-primary btn-block" :disabled="loading">
             <div>
             <div class="sns-icon-wrapper">
               <img class="sns-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Kakao_logo.jpg/100px-Kakao_logo.jpg"/>
             </div>              
-             <b class="sns-btn-text">Sign in with KaKao</b>
+             <b class="sns-btn-text">로그인</b>
             </div>
           </button>
         </div>  
@@ -78,7 +78,7 @@
             <div class="sns-icon-wrapper">
               <img class="sns-icon" src="https://image.flaticon.com/icons/svg/174/174848.svg"/>
             </div>              
-             <b class="sns-btn-text">Sign in with FaceBook</b>
+             <b class="sns-btn-text">로그인</b>
             </div>
           </button>
         </div>  
@@ -89,6 +89,11 @@
 
 <script>
 import User from '../models/user';
+/*
+const KaKaoInfo = {
+  apikey : "cdedfa981ea5ba09779968cfd09edc89"
+}
+*/
 
 export default {
   name: 'Login',
@@ -109,6 +114,7 @@ export default {
     if (this.loggedIn) {
       this.$router.push('/profile');
     }
+    //window.Kakao.init(KaKaoInfo.apikey);      
   },
   methods: {
     handleLogin() {
@@ -138,8 +144,7 @@ export default {
     handleLoginwithGoogle() {
       this.$gAuth
         .signIn()
-        .then(GoogleUser => {
-
+        .then(GoogleUser => {          
           console.log(GoogleUser);
 
           this.snsuser.username = GoogleUser.getBasicProfile().getEmail();
@@ -148,8 +153,6 @@ export default {
           this.snsuser.principal = GoogleUser.getAuthResponse().id_token;
           this.snsuser.user_nickname = GoogleUser.getBasicProfile().getGivenName() + GoogleUser.getBasicProfile().getFamilyName();
           this.snsuser.social_type = 'google';
-          
-          console.log(GoogleUser.getAuthResponse().id_token);
 
           /* process
           1. 등록된 유저 확인
@@ -177,7 +180,47 @@ export default {
         });     
     },
     handleLoginwithKaKao() {
-      console.log('handleLoginwithKaKao');
+
+      let kakaouser = this.snsuser;
+      let store = this.$store;
+      let route = this.$router;
+      
+      window.Kakao.Auth.login({
+        scope: 'account_email,profile,gender,birthday',
+        success: function(response) {
+          console.log(response);
+          window.Kakao.API.request({
+            url: '/v2/user/me',
+            success: function(response) {       
+              kakaouser.username = response.kakao_account.email;
+              kakaouser.password = response.kakao_account.email;
+              kakaouser.email = response.kakao_account.email;
+              kakaouser.principal =response.id;
+              kakaouser.user_nickname = response.kakao_account.profile.nickname;
+              kakaouser.social_type = 'kakao';              
+              store.dispatch('auth/signinwithsns', kakaouser).then(
+                () => {
+                  route.push('/profile');
+                },
+                error => {
+                  this.loading = false;
+                  this.message =
+                    (error.response && error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+                }
+              );              
+              
+            },
+            fail: function(error) {
+              console.log(error);
+            },
+          });          
+        },
+        fail: function(error) {
+          console.log(error);
+        },
+      });
     },
     handleLoginwithFacebook() {
       console.log('handleLoginwithFacebook');
