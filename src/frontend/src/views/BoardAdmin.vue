@@ -1,6 +1,6 @@
 <template>
-    <div class="container">
-        <header class="jumbotron">
+    <div>
+        <header class="jumbotron mt-4">
           <h2>{{content}}</h2>
           <p class="lead">관리자 게시판</p>
           <hr class="my-4">
