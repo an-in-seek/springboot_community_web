@@ -1,7 +1,8 @@
 import axios from 'axios';
 import authHeader from './auth-header';
+import Constant from '../constant'
 
-const API_URL = 'http://localhost:8090/api/board/';
+const API_URL = Constant.SERVER_IP+':8090/api/board/';
 
 class BoardService {
   getUserBoardDetail(boardNo) {

@@ -1,6 +1,7 @@
 import axios from 'axios';
+import Constant from '../constant'
 
-const API_URL = 'http://localhost:8090/api/auth/';
+const API_URL = Constant.SERVER_IP+':8090/api/auth/';
 
 class AuthService {
   login(user) {
