@@ -89,11 +89,7 @@
 
 <script>
 import User from '../models/user';
-/*
-const KaKaoInfo = {
-  apikey : "cdedfa981ea5ba09779968cfd09edc89"
-}
-*/
+import Constant from '../constant';
 
 export default {
   name: 'Login',
@@ -114,7 +110,10 @@ export default {
     if (this.loggedIn) {
       this.$router.push('/profile');
     }
-    //window.Kakao.init(KaKaoInfo.apikey);      
+    console.log(window.Kakao.isInitialized());
+    if (!window.Kakao.isInitialized()) {
+       window.Kakao.init(Constant.KAKAO_API_KEY);
+    }    
   },
   methods: {
     handleLogin() {
@@ -146,33 +145,9 @@ export default {
         .signIn()
         .then(GoogleUser => {          
           console.log(GoogleUser);
-
-          this.snsuser.username = GoogleUser.getBasicProfile().getEmail();
-          this.snsuser.password = GoogleUser.getBasicProfile().getEmail();
-          this.snsuser.email = GoogleUser.getBasicProfile().getEmail();
-          this.snsuser.principal = GoogleUser.getAuthResponse().id_token;
-          this.snsuser.user_nickname = GoogleUser.getBasicProfile().getGivenName() + GoogleUser.getBasicProfile().getFamilyName();
-          this.snsuser.social_type = 'google';
-
-          /* process
-          1. 등록된 유저 확인
-          2. 기 등록 유저인 경우 해당유저 정보로 그대로 로그인
-          3. 등록되지 않은 유저의 경우 해당 정보(SNS)로 유저 등록 후 로그인
-          */
-          
-          this.$store.dispatch('auth/signinwithsns', this.snsuser).then(
-            () => {
-              this.$router.push('/profile');
-            },
-            error => {
-              this.loading = false;
-              this.message =
-                (error.response && error.response.data.message) ||
-                error.message ||
-                error.toString();
-            }
-          );     
-             
+          this.snsuser = new User();          
+          this.snsuser = this.bindingSocialUserInfo(GoogleUser, 'google');
+          this.handleSocialLogin(this.snsuser);
         })
         .catch(error => {
           //on fail do something
@@ -180,37 +155,17 @@ export default {
         });     
     },
     handleLoginwithKaKao() {
-
-      let kakaouser = this.snsuser;
-      let store = this.$store;
-      let route = this.$router;
-      
+      let _this = this;
       window.Kakao.Auth.login({
         scope: 'account_email,profile,gender,birthday',
         success: function(response) {
           console.log(response);
           window.Kakao.API.request({
             url: '/v2/user/me',
-            success: function(response) {       
-              kakaouser.username = response.kakao_account.email;
-              kakaouser.password = response.kakao_account.email;
-              kakaouser.email = response.kakao_account.email;
-              kakaouser.principal =response.id;
-              kakaouser.user_nickname = response.kakao_account.profile.nickname;
-              kakaouser.social_type = 'kakao';              
-              store.dispatch('auth/signinwithsns', kakaouser).then(
-                () => {
-                  route.push('/profile');
-                },
-                error => {
-                  this.loading = false;
-                  this.message =
-                    (error.response && error.response.data.message) ||
-                    error.message ||
-                    error.toString();
-                }
-              );              
-              
+            success: function(KaKaoUser) {                
+              this.snsuser = new User('', '');          
+              this.snsuser = _this.bindingSocialUserInfo(KaKaoUser, 'kakao');
+              _this.handleSocialLogin(this.snsuser);                                        
             },
             fail: function(error) {
               console.log(error);
@@ -224,7 +179,41 @@ export default {
     },
     handleLoginwithFacebook() {
       console.log('handleLoginwithFacebook');
-    }            
+    }, 
+    bindingSocialUserInfo(socailUserInfo, type) {
+       if (type === 'google') {
+          this.snsuser.username  = socailUserInfo.getBasicProfile().getEmail();
+          this.snsuser.password  = socailUserInfo.getBasicProfile().getEmail();
+          this.snsuser.email     = socailUserInfo.getBasicProfile().getEmail();
+          this.snsuser.principal = socailUserInfo.getAuthResponse().id_token;
+          this.snsuser.user_nickname = socailUserInfo.getBasicProfile().getGivenName() + socailUserInfo.getBasicProfile().getFamilyName();
+          this.snsuser.social_type = 'google';
+       } else if (type === 'kakao') {
+          this.snsuser.username = socailUserInfo.kakao_account.email;
+          this.snsuser.password = socailUserInfo.kakao_account.email;
+          this.snsuser.email = socailUserInfo.kakao_account.email;
+          this.snsuser.principal =socailUserInfo.id;
+          this.snsuser.user_nickname = socailUserInfo.kakao_account.profile.nickname;
+          this.snsuser.social_type = 'kakao';                       
+       } else if (type === 'facebook') {
+          this.snsuser = '';
+       }
+       return this.snsuser; 
+    },
+    handleSocialLogin(socailUserInfo) {
+        this.$store.dispatch('auth/signinwithsns', socailUserInfo).then(
+          () => {
+            this.$router.push('/profile');
+          },
+          error => {
+            this.loading = false;
+            this.message =
+              (error.response && error.response.data.message) ||
+              error.message ||
+              error.toString();
+          }
+        );         
+    }
   }
 };
 </script>

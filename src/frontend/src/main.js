@@ -21,7 +21,7 @@ import {
   faList
 } from '@fortawesome/free-solid-svg-icons';
 import GAuth from 'vue-google-oauth2'
-
+import Constant from './constant';
 library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faList);
 
 Vue.config.productionTip = false;
@@ -42,7 +42,7 @@ Vue.use(Vuex);
 Vue.use(VueMomentJS, moment);
 
 Vue.use(GAuth, {
-  clientId: '418763496685-ek7u44oj3jvbm7tijeakgl1kkf3d4l8m.apps.googleusercontent.com',
+  clientId: Constant.GOOGLE_API_KEY,
   scope: 'email profile',
   prompt: 'consent'//, fetch_basic_profile: true
 })
