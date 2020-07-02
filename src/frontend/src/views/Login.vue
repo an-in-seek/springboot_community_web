@@ -47,42 +47,32 @@
           <div v-if="message" class="alert alert-danger" role="alert">{{message}}</div>
         </div>
       </form>
-      <form name="form" @submit.prevent="handleLoginwithGoogle">
-        <div class="form-group">
-          <button class="btn btn-primary btn-block" :disabled="loading">
-            <div>
-            <div class="sns-icon-wrapper">
-              <img class="sns-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
-            </div>              
-             <b class="sns-btn-text">로그인</b>
-            </div>
-          </button>
-        </div>  
-      </form>    
-      <form name="form" @submit.prevent="handleLoginwithKaKao">
-        <div class="form-group">
-          <button id="kakaologinbtn" class="btn btn-primary btn-block" :disabled="loading">
-            <div>
-            <div class="sns-icon-wrapper">
-              <img class="sns-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Kakao_logo.jpg/100px-Kakao_logo.jpg"/>
-            </div>              
-             <b class="sns-btn-text">로그인</b>
-            </div>
-          </button>
-        </div>  
-      </form>   
-      <form name="form" @submit.prevent="handleLoginwithFacebook">
-        <div class="form-group">
-          <button class="btn btn-primary btn-block" :disabled="loading">
-            <div>
-            <div class="sns-icon-wrapper">
-              <img class="sns-icon" src="https://image.flaticon.com/icons/svg/174/174848.svg"/>
-            </div>              
-             <b class="sns-btn-text">로그인</b>
-            </div>
-          </button>
-        </div>  
-      </form>                 
+      <div class="social-form">
+        <a class="social-title">다른 계정으로 로그인</a>
+        <div class="social-group">
+          <form name="form" @submit.prevent="handleLoginwithGoogle">
+              <button>
+                  <div class="sns-icon-wrapper">
+                    <img class="sns-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+                  </div>              
+              </button>
+          </form>    
+          <form name="form" @submit.prevent="handleLoginwithKaKao">
+              <button>
+                <div class="sns-icon-wrapper">
+                  <img class="sns-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Kakao_logo.jpg/100px-Kakao_logo.jpg"/>
+                </div>        
+              </button>
+          </form>   
+          <form name="form" @submit.prevent="handleLoginwithFacebook">
+              <button>
+                <div class="sns-icon-wrapper">
+                  <img class="sns-icon" src="https://image.flaticon.com/icons/svg/174/174848.svg"/>
+                </div>              
+              </button>
+          </form>          
+        </div>          
+      </div>              
     </div>
   </div>
 </template>
@@ -114,6 +104,12 @@ export default {
     if (!window.Kakao.isInitialized()) {
        window.Kakao.init(Constant.KAKAO_API_KEY);
     }    
+    window.FB.init({
+      appId      : Constant.FACEBOOK_API_KEY,
+      status     : true,
+      xfbml      : true,
+      version    : 'v2.7' // or v2.6, v2.5, v2.4, v2.3
+    });
   },
   methods: {
     handleLogin() {
@@ -179,6 +175,16 @@ export default {
     },
     handleLoginwithFacebook() {
       console.log('handleLoginwithFacebook');
+      window.FB.login(function(response) {
+          if (response.authResponse) {
+          console.log('Welcome!  Fetching your information.... ');
+          window.FB.api('/me', function(response) {
+            console.log(response);
+          });
+          } else {
+          console.log('User cancelled login or did not fully authorize.');
+          }
+      });
     }, 
     bindingSocialUserInfo(socailUserInfo, type) {
        if (type === 'google') {
@@ -264,20 +270,26 @@ label {
 
 .sns-icon {
 	position: absolute;
-	margin-top: 8px;
-	margin-left: -12px;
-	width: 24px;
-	height: 24px;
+	margin-top: 5px;
+	margin-left: -15px;
+	width: 30px;
+	height: 30px;
+} .social-group {
+  display: flex;   
+  border-top: 1px solid rgba(0,0,0,.125);
+} .social-group form {
+  margin-left: 50px;
+} .social-title {
+  font-size: 14px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;  
+} .social-form {
+  height: 90px;
+  text-align: center;
+  border : 1px solid rgba(0,0,0,.125);
 }
 
-.sns-btn-text {
-	color: #fff;
-  padding-left: 40px;
-  padding-top: 10px;
-  text-align: left;
-	font-size: 16px;
-	letter-spacing: 0.2px;
-	font-family: "Roboto";
-}
 
 </style>
