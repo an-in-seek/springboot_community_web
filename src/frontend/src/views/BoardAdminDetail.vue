@@ -1,6 +1,6 @@
 <template>
-    <div class="col-md-12">
-        <div class="card card-container">
+    <div>
+        <div class="card card-container mt-4">
             <b-form v-if="showMainForm">
                 <b-form-group id="boardNoGroup" :label="lblBoardNoGroup" label-for="boardNo">
                     <b-form-input
@@ -211,7 +211,6 @@ label {
   background-color: #f7f7f7;
   padding: 20px 25px 30px;
   margin: 0 auto 25px;
-  margin-top: 50px;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
