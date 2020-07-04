@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header class="mt-4">
+    <div class="mt-4">
       <b-carousel
         id="carousel-1"
         v-model="slide"
@@ -26,11 +26,10 @@
           <h1>Hello World!!</h1>
         </b-carousel-slide>
       </b-carousel>
-    </header>
+    </div>
 
-    <body>
-      <div class="mt-4">
-        <b-card-group columns>
+    <div class="mt-4">
+      <b-card-group columns>
         <b-card
           title="Card title that wraps to a new line"
           img-src="https://placekitten.com/g/400/450"
@@ -88,15 +87,14 @@
           </template>
         </b-card>
       </b-card-group>
-      </div>
-    </body>
+    </div>
 
-    <footer class="pt-4 mt-4">
+    <div class="pt-4 mt-4">
       <hr />
       <div class="text-center py-3">
           &copy; 2020 Copyright: <a href="#"> Community.com </a>
       </div>
-    </footer>
+    </div>
   </div>
 </template>
 
