@@ -61,11 +61,14 @@
                     <b-col lg="12" class="pb-1" v-if="showCreateButton">
                         <b-button block size="lg" type="submit" variant="primary" @click="handleCreate">{{btnCreate}}</b-button>
                     </b-col>
-                    <b-col lg="6" class="pb-1" v-if="showUpdateButton">
+                    <b-col lg="4" class="pb-1" v-if="showUpdateButton">
                         <b-button block size="lg" type="submit" variant="primary" @click="handleUpdate">{{btnUpdate}}</b-button>
                     </b-col>
-                    <b-col lg="6" class="pb-1" v-if="showDeleteButton">
+                    <b-col lg="4" class="pb-1" v-if="showDeleteButton">
                         <b-button block size="lg" type="reset" variant="danger" @click="handleDelete">{{btnDelete}}</b-button>
+                    </b-col>
+                    <b-col lg="4" class="pb-1" v-if="showCommentButton">
+                        <b-button block size="lg" variant="success" @click="handleComment">{{btnComment}}</b-button>
                     </b-col>
                 </b-row>
             </b-form>
@@ -87,6 +90,7 @@
                 showCreateButton: true,
                 showUpdateButton: true,
                 showDeleteButton: true,
+                showCommentButton: true,
 
                 // To Do: 추후 DB에서 다국어 값으로 가져오는 방법으로 변경 필요
                 lblBoardNoGroup: '번호:',
@@ -102,6 +106,7 @@
                 btnCreate: '등록',
                 btnUpdate: '수정',
                 btnDelete: '삭제',
+                btnComment: '댓글',
 
                 // 데이터 세팅
                 board: new Board('', '', ''),
@@ -127,12 +132,14 @@
             this.showCreateButton = false;
             this.showUpdateButton = false;
             this.showDeleteButton = false;
+            this.showCommentButton = false;
             const storeUsername = this.$store.state.auth.user.username;
             const boardNo = Number(this.$route.params.boardNo);
             if(boardNo){
                 // 수정
                 this.showUpdateButton = true;
                 this.showDeleteButton = true;
+                this.showCommentButton = true;
                 BoardService.getAdminBoardDetail(boardNo).then(response => {
                     this.board.boardNo = response.data.boardNo;
                     this.board.username = CommonUtil.isEmpty(response.data.user) ? '' : response.data.user.username;
@@ -192,6 +199,12 @@
                     }, error => {
                         this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
                     });
+            },
+            // 댓글
+            handleComment(evt){
+                evt.preventDefault()
+                // 아래쪽에 댓글창 보이도록
+                alert('댓글 버튼 클릭됨!!');
             }
         }
     };

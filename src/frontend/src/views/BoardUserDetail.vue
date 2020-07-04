@@ -63,13 +63,16 @@
 
                 <b-row>
                     <b-col lg="12" class="pb-1" v-if="showCreateButton">
-                        <b-button block size="lg" type="submit" variant="primary" @click="handleCreate">{{btnCreate}}</b-button>
+                        <b-button block size="lg" variant="primary" @click="handleCreate">{{btnCreate}}</b-button>
                     </b-col>
-                    <b-col lg="6" class="pb-1" v-if="showUpdateButton">
-                        <b-button block size="lg" type="submit" variant="primary" @click="handleUpdate">{{btnUpdate}}</b-button>
+                    <b-col lg="4" class="pb-1" v-if="showUpdateButton">
+                        <b-button block size="lg" variant="primary" @click="handleUpdate">{{btnUpdate}}</b-button>
                     </b-col>
-                    <b-col lg="6" class="pb-1" v-if="showDeleteButton">
-                        <b-button block size="lg" type="reset" variant="danger" @click="handleDelete">{{btnDelete}}</b-button>
+                    <b-col lg="4" class="pb-1" v-if="showDeleteButton">
+                        <b-button block size="lg" variant="danger" @click="handleDelete">{{btnDelete}}</b-button>
+                    </b-col>
+                    <b-col lg="4" class="pb-1" v-if="showCommentButton">
+                        <b-button block size="lg" variant="success" @click="handleComment">{{btnComment}}</b-button>
                     </b-col>
                 </b-row>
             </b-form>
@@ -91,6 +94,7 @@
                 showCreateButton: true,
                 showUpdateButton: true,
                 showDeleteButton: true,
+                showCommentButton: true,
                 formReadonly: true,
 
                 // To Do: 추후 DB에서 다국어 값으로 가져오는 방법으로 변경 필요
@@ -107,6 +111,7 @@
                 btnCreate: '등록',
                 btnUpdate: '수정',
                 btnDelete: '삭제',
+                btnComment: '댓글',
 
                 // 데이터 세팅
                 board: new Board('', '', ''),
@@ -125,6 +130,7 @@
             this.showCreateButton = false;
             this.showUpdateButton = false;
             this.showDeleteButton = false;
+            this.showCommentButton = false;
             const storeUsername = this.$store.state.auth.user.username;
             const boardNo = Number(this.$route.params.boardNo);
             if(boardNo){
@@ -132,6 +138,7 @@
                 BoardService.getUserBoardDetail(boardNo).then(response => {
                     this.board.boardNo = response.data.boardNo;
                     this.board.username = CommonUtil.isEmpty(response.data.user) ? '' : response.data.user.username;
+                    this.showCommentButton = true;
                     if(storeUsername == this.board.username){
                         this.showUpdateButton = true;
                         this.showDeleteButton = true;
@@ -149,6 +156,7 @@
             } else {
                 // 등록
                 this.showCreateButton = true;
+                this.showCommentButton = false,
                 this.board.boardNo = null;
                 this.board.username = storeUsername;
                 this.board.createdDate = this.$moment(new Date()).format('YYYY-MM-DD HH:MM:SS');
@@ -194,6 +202,12 @@
                     }, error => {
                         this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
                     });
+            },
+            // 댓글
+            handleComment(evt){
+                evt.preventDefault()
+                // 아래쪽에 댓글창 보이도록
+                alert('댓글 버튼 클릭됨!!');
             }
         }
     };
