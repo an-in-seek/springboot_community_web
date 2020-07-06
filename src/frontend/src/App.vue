@@ -69,6 +69,14 @@
                     </b-navbar-nav>
 
                     <b-navbar-nav>
+                        <li class="nav-item">
+                            <router-link to="/vuestagram" class="nav-link">
+                                <font-awesome-icon icon="address-card"/> 뷰스타그램
+                            </router-link>
+                        </li>
+                    </b-navbar-nav>
+
+                    <b-navbar-nav>
                         <li v-if="showAdminBoard" class="nav-item">
                             <router-link to="/admin" class="nav-link">
                                 <font-awesome-icon icon="list"/> 관리자 게시판
