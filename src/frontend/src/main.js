@@ -19,11 +19,16 @@ import {
   faSignInAlt,
   faSignOutAlt,
   faList,
-  faAddressCard
+  faAddressCard,
+  faHeart,
+  faHeartBroken,
+  faComment,
+  faShareAlt,
+  faEllipsisH
 } from '@fortawesome/free-solid-svg-icons';
 import GAuth from 'vue-google-oauth2'
 import Constant from './constant';
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faList, faAddressCard);
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faList, faAddressCard, faHeart, faHeartBroken, faComment, faShareAlt, faEllipsisH);
 
 Vue.config.productionTip = false;
 
