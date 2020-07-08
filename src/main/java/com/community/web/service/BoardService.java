@@ -7,14 +7,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import com.community.web.domain.Board;
+import com.community.web.domain.Comment;
 import com.community.web.repository.BoardRepository;
+import com.community.web.repository.CommentRepository;
 
 @Service
 public class BoardService {
 
 	@Autowired
     private BoardRepository boardRepository;
+	
+	@Autowired
+    private CommentRepository commentRepository;	
 
 	/**
      * 게시판 글 목록 조회
@@ -43,5 +49,9 @@ public class BoardService {
     public Board findBoardByBoardNo(Long boardNo) {
         return boardRepository.findById(boardNo).orElse(new Board());
     }
+    
+    public List<Comment> findCommentList(Board board) {
+        return commentRepository.findByBoard(board);
+    }    
 }
 

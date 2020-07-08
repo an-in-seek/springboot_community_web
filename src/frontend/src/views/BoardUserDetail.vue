@@ -75,6 +75,12 @@
                         <b-button block size="lg" variant="success" @click="handleComment">{{btnComment}}</b-button>
                     </b-col>
                 </b-row>
+                 <div v-if="showboardComment">
+                    <CommentForm>
+                    </CommentForm>
+                    <CommentList>
+                    </CommentList>
+                 </div>
             </b-form>
         </div>
     </div>
@@ -96,6 +102,7 @@
                 showDeleteButton: true,
                 showCommentButton: true,
                 formReadonly: true,
+                showboardComment: false,
 
                 // To Do: 추후 DB에서 다국어 값으로 가져오는 방법으로 변경 필요
                 lblBoardNoGroup: '번호:',
@@ -122,7 +129,16 @@
                         text: '자유게시판',
                         value: 'FREE'
                     }
-                ]
+                ],
+                childData: {
+                    //DB에서 댓글정보를 가져와 바인딩
+                    comments: 
+                    [{ id: 1, username: '테스트1', createtime: new Date(), comment : "댓글1" }, 
+                     { id: 2, username: '테스트2', createtime: new Date(), comment : "댓글2" }, 
+                     { id: 3, username: '테스트3', createtime: new Date(), comment : "댓글3" }, 
+                     { id: 4, username: '테스트4', createtime: new Date(), comment : "댓글4" }, 
+                     { id: 5, username: '테스트5', createtime: new Date(), comment : "댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~" }]                    
+                }
             };
         },
         mounted() {
@@ -136,6 +152,7 @@
             if(boardNo){
                 // 수정
                 BoardService.getUserBoardDetail(boardNo).then(response => {
+                    console.log("response",response);
                     this.board.boardNo = response.data.boardNo;
                     this.board.username = CommonUtil.isEmpty(response.data.user) ? '' : response.data.user.username;
                     this.showCommentButton = true;
@@ -208,6 +225,7 @@
                 evt.preventDefault()
                 // 아래쪽에 댓글창 보이도록
                 alert('댓글 버튼 클릭됨!!');
+                this.showboardComment = true;
             }
         }
     };

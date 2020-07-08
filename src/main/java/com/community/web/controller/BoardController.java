@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.community.web.domain.Board;
+import com.community.web.domain.Comment;
 import com.community.web.domain.User;
 import com.community.web.domain.enums.BoardType;
 import com.community.web.payload.request.BoardRequest;
@@ -64,9 +65,13 @@ public class BoardController {
 	 */
 	@GetMapping("/user/detail")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public Board userBoardDetail(@RequestParam(value = "boardNo", defaultValue = "1") Long boardNo) {
+    public Map<String, Object> userBoardDetail(@RequestParam(value = "boardNo", defaultValue = "1") Long boardNo) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		Board board = boardService.findBoardByBoardNo(boardNo);
-        return board;
+		List<Comment> commentList = boardService.findCommentList(board);
+		map.put("board", board);
+		map.put("comments", commentList);
+        return map;
     }
 	
 	/**
