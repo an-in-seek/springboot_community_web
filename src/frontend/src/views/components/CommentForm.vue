@@ -1,12 +1,14 @@
 <template>
   <div class="content-body">  
     <div class="content-body-user-info">
-      {{this.storeUsername}}
+      {{this.$store.state.auth.user.username}}
     </div>
     <div class="content-regist">
       <div class="content-regist-form">
         <b-form-group id="boardContentGroup">
-            <b-form-textarea v-if="isLogin">
+            <b-form-textarea 
+            v-if="isLogin"
+            v-model="comment.contents">
             </b-form-textarea>          
             <b-form-textarea v-if="!isLogin"
             disabled="true"
@@ -24,23 +26,37 @@
 </template>
 
 <script>
+  import CommentService from '../../services/comment.service';
+
   export default {
     name: 'CommentForm',
+    props: {
+      board: Object
+    },
     mounted() {
-      
+    this.comment.username = this.$store.state.auth.user.username;      
+    this.comment.boardNo = this.board.boardNo;
     },
     data () {
       return {
         title: void 0,
         isLogin: this.$store.state.auth.status.loggedIn,
-        comment: this.$parent.childData.comments,
-        storeUsername: this.$store.state.auth.user.username
+        comment: new Comment('', '', '')
       }
     },
     methods: {
-      handleCreateComment () {
-        console.log('댓글등록');
+      handleCreateComment(evt) {
+          evt.preventDefault()
+          CommentService
+              .createComment(this.comment)
+              .then(response => {
+                  alert(response.data.message);                  
+                  location.reload(); // 더 좋은 방법을 모르겠어요...
+              }, error => {
+                  console.log(error)
+              });
       }     
+      
     }
   }
 </script>

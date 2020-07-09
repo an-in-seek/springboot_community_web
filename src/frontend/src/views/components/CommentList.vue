@@ -1,14 +1,20 @@
 <template>
   <div>
+    <div class="content-title">
+      {{"댓글 "+ this.content.length}}
+    </div>    
     <div class="content" v-for="item in content" v-bind:key="item.id">
-      <div class="content-userinfo">      
-        <a>{{item.username}}</a>
-        <div> 
-         {{item.createtime}}
+      <div class="content-user">      
+        <div class="content-userinfo">      
+          <a>{{item.user.userNickname}}</a><br>
+          <a>{{item.createdDate}}</a>
+        </div>
+        <div class="content-remove" v-if="item.iscancel">
+          <b-button class="content-remove-btn" squared @click="handleRemove($event, item)">X</b-button>
         </div>
       </div>
       <div class="content-body">      
-          <p>{{item.comment}}</p>      
+          <p>{{item.contents}}</p>      
       </div>      
     </div>    
   </div>  
@@ -16,17 +22,37 @@
 </template>
 
 <script>
+  import CommentService from '../../services/comment.service';
   export default {
     name: 'CommentList',
+    props: {
+      comments: Array
+    },    
     mounted() {
-      console.log(this.$parent.childData);
+      console.log(this.content)
     },    
     data () {
       return {
-        content: this.$parent.childData.comments
+        content: this.comments.map(comment => {
+          comment.iscancel = comment.user.username == this.$store.state.auth.user.username ? true : false;
+          return comment;
+        }),
+        showremoveButton: true,
       }
     },
     methods: {
+      handleRemove(event, item) {
+          event.preventDefault()
+          CommentService
+              .deleteComment(item)
+              .then(response => {
+                  alert(response.data.message);
+                  location.reload(); // 더 좋은 방법을 모르겠어요...
+              }, error => {
+                  console.log(error)
+              });
+              
+      }
     }
   }
 </script>
@@ -44,6 +70,9 @@
     min-height: 80px;
     border-top: 1px solid #ddd;
   }
+  .content-user {
+    display: flex;
+  }
   .content-userinfo {
     position: relative;
     display: block;
@@ -52,5 +81,26 @@
     font-size: 14px;
     background-color: #fff;
     min-height: 50px;
+    width: 100%;
+  }
+  .content-remove {
+    width: max-content;
+    background-color: #fff;
+    text-align: right;
+  } 
+  .content-remove-btn {
+    width: 20px;
+    height: 25px;
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+    justify-content: center;
+  }
+    .content-title {
+    border: 1px solid #ddd;
+    height: 40px;  
+    padding: 10px 15px;
+    background-color: #f2f2f2;
+    font-size: 16px;
   }
 </style>

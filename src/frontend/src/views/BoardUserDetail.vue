@@ -76,9 +76,9 @@
                     </b-col>
                 </b-row>
                  <div v-if="showboardComment">
-                    <CommentForm>
+                    <CommentForm :board="this.board">
                     </CommentForm>
-                    <CommentList>
+                    <CommentList :comments="this.board.comments">
                     </CommentList>
                  </div>
             </b-form>
@@ -89,8 +89,8 @@
 <script>
     import Board from '../models/board';
     import BoardService from '../services/board.service';
+    import CommentService from '../services/comment.service';
     import CommonUtil from '../util/common-util';
-
     export default {
         name: 'userBoardDetail',
         data() {
@@ -129,16 +129,7 @@
                         text: '자유게시판',
                         value: 'FREE'
                     }
-                ],
-                childData: {
-                    //DB에서 댓글정보를 가져와 바인딩
-                    comments: 
-                    [{ id: 1, username: '테스트1', createtime: new Date(), comment : "댓글1" }, 
-                     { id: 2, username: '테스트2', createtime: new Date(), comment : "댓글2" }, 
-                     { id: 3, username: '테스트3', createtime: new Date(), comment : "댓글3" }, 
-                     { id: 4, username: '테스트4', createtime: new Date(), comment : "댓글4" }, 
-                     { id: 5, username: '테스트5', createtime: new Date(), comment : "댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~댓글창 늘어나랏~" }]                    
-                }
+                ] 
             };
         },
         mounted() {
@@ -152,9 +143,8 @@
             if(boardNo){
                 // 수정
                 BoardService.getUserBoardDetail(boardNo).then(response => {
-                    console.log("response",response);
-                    this.board.boardNo = response.data.boardNo;
-                    this.board.username = CommonUtil.isEmpty(response.data.user) ? '' : response.data.user.username;
+                    this.board.boardNo = response.data.board.boardNo;
+                    this.board.username = CommonUtil.isEmpty(response.data.board.user) ? '' : response.data.board.user.username;
                     this.showCommentButton = true;
                     if(storeUsername == this.board.username){
                         this.showUpdateButton = true;
@@ -162,14 +152,26 @@
                     } else {
                         this.formReadonly = true;
                     }
-                    this.board.createdDate = this.$moment(response.data.createdDate).format('YYYY-MM-DD HH:MM:SS');
-                    this.board.boardTitle = response.data.boardTitle;
-                    this.board.boardSubTitle = response.data.boardSubTitle;
-                    this.board.boardType = response.data.boardType;
-                    this.board.boardContent = response.data.boardContent;
+                    this.board.createdDate = this.$moment(response.data.board.createdDate).format('YYYY-MM-DD HH:MM:SS');
+                    this.board.boardTitle = response.data.board.boardTitle;
+                    this.board.boardSubTitle = response.data.board.boardSubTitle;
+                    this.board.boardType = response.data.board.boardType;
+                    this.board.boardContent = response.data.board.boardContent;
+                    
                 }, error => {
                     this.board.boardContent = (error.response && error.response.data.message) || error.message || error.toString();
                 });
+                
+                //코멘트 리스트
+                CommentService.getComments(boardNo).then(response => {
+                    this.board.comments = response.data.items.map(item => {
+                      item.createdDate = this.$moment(item.createdDate).format('YYYY-MM-DD HH:MM:SS'); 
+                      item.updatedDate = this.$moment(item.updatedDate).format('YYYY-MM-DD HH:MM:SS');
+                      return item;
+                    })
+                }, error => {
+                    console.log(error);
+                });                
             } else {
                 // 등록
                 this.showCreateButton = true;
@@ -223,9 +225,7 @@
             // 댓글
             handleComment(evt){
                 evt.preventDefault()
-                // 아래쪽에 댓글창 보이도록
-                alert('댓글 버튼 클릭됨!!');
-                this.showboardComment = true;
+                this.showboardComment = true;          
             }
         }
     };

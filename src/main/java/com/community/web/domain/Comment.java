@@ -25,7 +25,7 @@ public class Comment implements Serializable {
 	private Long commentNo;
 
 	@Column
-	private String comment;
+	private String contents;
 
 	@Column
 	private LocalDateTime createdDate;
@@ -69,12 +69,12 @@ public class Comment implements Serializable {
 		this.commentNo = commentNo;
 	}
 
-	public String getComment() {
-		return comment;
+	public String getContents() {
+		return contents;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setContents(String contents) {
+		this.contents = contents;
 	}
 
 	public Board getBoard() {
