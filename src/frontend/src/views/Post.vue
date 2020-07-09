@@ -30,7 +30,7 @@
                     <b-input-group>
                         <b-form-input :placeholder="phComment"></b-form-input>
                         <b-input-group-append>
-                            <b-button variant="info" @click="handleCreate">{{btnCreate}}</b-button>
+                            <b-button variant="info" @click="handleCreateComment">{{btnCreate}}</b-button>
                         </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -71,6 +71,10 @@ export default {
     handleShowCommentList(evt){
       evt.preventDefault()
       alert("댓글목록!");
+    },
+    handleCreateComment(evt){
+      evt.preventDefault()
+      alert("댓글등록!");
     },
     handleShare(evt){
       evt.preventDefault()
