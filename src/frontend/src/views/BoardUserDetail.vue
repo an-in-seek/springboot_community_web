@@ -133,7 +133,6 @@
             };
         },
         mounted() {
-            console.log("BoardUserDetail mounted");
             this.formReadonly = false;
             this.showCreateButton = false;
             this.showUpdateButton = false;

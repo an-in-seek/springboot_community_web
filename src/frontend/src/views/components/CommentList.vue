@@ -28,19 +28,16 @@
     props: {
       comments: Array
     },    
-    created() {
-      console.log("CommentList created")
-    },    
-    updated() {
-      console.log("CommentList updated")
-    },
-    mounted() {
-      console.log("CommentList mounted")
-    },    
     data () {
       return {
         content: this.comments.map(comment => {
-          comment.iscancel = comment.user.username == this.$store.state.auth.user.username ? true : false;
+          comment.iscancel = comment.user.username == this.$store.state.auth.user.username ? true : false;          
+
+          //관리자는 true
+          if (this.$store.state.auth.user.roles == 'ROLE_ADMIN')  {
+              comment.iscancel = true;
+          }          
+
           return comment;
         }),
         showremoveButton: true,

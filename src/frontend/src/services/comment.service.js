@@ -31,8 +31,6 @@ class CommentService {
   }
 
   deleteComment(comment) {
-    console.log(comment)
-    console.log(API_URL + 'delete')    
     return axios.post(API_URL + 'delete', {
       commentNo: comment.commentNo
     }, {
