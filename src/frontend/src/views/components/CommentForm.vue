@@ -51,7 +51,7 @@
               .createComment(this.comment)
               .then(response => {
                   alert(response.data.message);                  
-                  location.reload(); // 더 좋은 방법을 모르겠어요...
+                  this.$emit('commentchanged');
               }, error => {
                   console.log(error)
               });

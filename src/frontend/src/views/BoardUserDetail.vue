@@ -76,9 +76,9 @@
                     </b-col>
                 </b-row>
                  <div v-if="showboardComment">
-                    <CommentForm :board="this.board">
+                    <CommentForm :board="this.board" v-on:commentchanged="commentchanged">
                     </CommentForm>
-                    <CommentList :comments="this.board.comments">
+                    <CommentList :comments="this.board.comments" v-on:commentchanged="commentchanged">
                     </CommentList>
                  </div>
             </b-form>
@@ -133,6 +133,7 @@
             };
         },
         mounted() {
+            console.log("BoardUserDetail mounted");
             this.formReadonly = false;
             this.showCreateButton = false;
             this.showUpdateButton = false;
@@ -225,7 +226,21 @@
             // 댓글
             handleComment(evt){
                 evt.preventDefault()
-                this.showboardComment = true;          
+                this.showboardComment = this.showboardComment == true ? false : true;
+            },
+            commentchanged(){
+                this.showboardComment = false;
+                const boardNo = Number(this.$route.params.boardNo);
+                CommentService.getComments(boardNo).then(response => {
+                    this.board.comments = response.data.items.map(item => {
+                      item.createdDate = this.$moment(item.createdDate).format('YYYY-MM-DD HH:MM:SS'); 
+                      item.updatedDate = this.$moment(item.updatedDate).format('YYYY-MM-DD HH:MM:SS');
+                      return item;
+                    })
+                    this.showboardComment = true;
+                }, error => {
+                    console.log(error);
+                });   
             }
         }
     };

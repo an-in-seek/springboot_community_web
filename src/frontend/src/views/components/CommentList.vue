@@ -28,8 +28,14 @@
     props: {
       comments: Array
     },    
+    created() {
+      console.log("CommentList created")
+    },    
+    updated() {
+      console.log("CommentList updated")
+    },
     mounted() {
-      console.log(this.content)
+      console.log("CommentList mounted")
     },    
     data () {
       return {
@@ -47,7 +53,7 @@
               .deleteComment(item)
               .then(response => {
                   alert(response.data.message);
-                  location.reload(); // 더 좋은 방법을 모르겠어요...
+                  this.$emit('commentchanged');
               }, error => {
                   console.log(error)
               });
