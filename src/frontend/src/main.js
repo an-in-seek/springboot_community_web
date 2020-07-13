@@ -24,14 +24,15 @@ import {
   faHeartBroken,
   faComment,
   faShareAlt,
-  faEllipsisH
+  faEllipsisH,
+  faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import GAuth from 'vue-google-oauth2'
 import Constant from './constant';
 import CommentForm from './views/components/CommentForm'
 import CommentList from './views/components/CommentList'
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faList, faAddressCard, faHeart, faHeartBroken, faComment, faShareAlt, faEllipsisH);
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faList, faAddressCard, faHeart, faHeartBroken, faComment, faShareAlt, faEllipsisH, faPlus);
 
 Vue.config.productionTip = false;
 
@@ -58,8 +59,6 @@ Vue.use(GAuth, {
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component(CommentForm.name, CommentForm);
 Vue.component(CommentList.name, CommentList);
-
-
 
 new Vue({
   router,
