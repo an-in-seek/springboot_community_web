@@ -48,7 +48,7 @@ public class Board implements Serializable {
 	private LocalDateTime updatedDate;
 
 	@ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_user_id"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_user_id_to_board_no"))
 	private User user;
 
 	public Board() {

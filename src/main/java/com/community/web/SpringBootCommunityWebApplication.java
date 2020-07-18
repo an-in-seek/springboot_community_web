@@ -13,12 +13,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.community.web.domain.Board;
+import com.community.web.domain.Post;
 import com.community.web.domain.Role;
 import com.community.web.domain.User;
 import com.community.web.domain.enums.BoardType;
 import com.community.web.domain.enums.ERole;
 import com.community.web.domain.enums.SexType;
 import com.community.web.repository.BoardRepository;
+import com.community.web.repository.PostRepository;
 import com.community.web.repository.RoleRepository;
 import com.community.web.repository.UserRepository;
 
@@ -30,8 +32,8 @@ public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 	}
 
 	@Bean
-	public CommandLineRunner runner(UserRepository userRepository,
-			BoardRepository boardRepository, RoleRepository roleRepository) {
+	public CommandLineRunner runner(UserRepository userRepository, RoleRepository roleRepository,
+			BoardRepository boardRepository, PostRepository postRepository) {
 		return (args) -> {
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); 
 			String admin = "admin";
@@ -39,6 +41,8 @@ public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 			String user = "user";
 			String password = encoder.encode("123456789");
 			String birthDate = "1989-08-28";
+			String profileImage = "profileImage";
+			String postImage = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/1211695/tropical_beach.jpg";
 			LocalDateTime nowDateTime = LocalDateTime.now();
 
 			// Role 기준정보 저장
@@ -46,26 +50,33 @@ public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 			Role moderatorRole = roleRepository.save(new Role(ERole.ROLE_MODERATOR));
 			Role userRole = roleRepository.save(new Role(ERole.ROLE_USER));
 
-			// admin 정보 저장
+			// admin 데이터 생성
 			Set<Role> roles = new HashSet<>();
 			roles.add(adminRole);
-			User adminInfo = new User(admin, password, admin, birthDate, SexType.MALE, admin + "@gmail.com", nowDateTime, nowDateTime, roles);
+			User adminInfo = new User(admin, password, admin, birthDate, SexType.MALE, admin + "@gmail.com", profileImage, nowDateTime, nowDateTime, roles);
 			userRepository.save(adminInfo);
 
-			// moderator 정보 저장
+			// moderator 데이터 생성
 			roles = new HashSet<>();
 			roles.add(moderatorRole);
-			User moderatorInfo = new User(moderator, password, moderator, birthDate, SexType.MALE, moderator + "@gmail.com", nowDateTime, nowDateTime, roles);
+			User moderatorInfo = new User(moderator, password, moderator, birthDate, SexType.MALE, moderator + "@gmail.com", profileImage, nowDateTime, nowDateTime, roles);
 			userRepository.save(moderatorInfo);
 
-			// user 정보 저장
+			// user 데이터 생성
 			roles = new HashSet<>();
 			roles.add(userRole);
-			User userInfo = new User(user, password, user, birthDate, SexType.MALE, user + "@gmail.com", nowDateTime, nowDateTime, roles);
+			User userInfo = new User(user, password, user, birthDate, SexType.MALE, user + "@gmail.com", profileImage, nowDateTime, nowDateTime, roles);
 			userRepository.save(userInfo);
 
-			IntStream.rangeClosed(1, 200).forEach(index -> boardRepository.save(new Board("제목" + index, "부제목" + index,
-					"내용" + index, BoardType.FREE, nowDateTime, nowDateTime, userInfo)));
+			// 게시글 200개 데이터 생성
+			IntStream.rangeClosed(1, 200).forEach(index -> 
+				boardRepository.save(new Board("제목" + index, "부제목" + index, "내용" + index, BoardType.FREE, nowDateTime, nowDateTime, userInfo))
+			);
+			
+			// Vuestagram 데이터 생성
+			IntStream.rangeClosed(1, 5).forEach(index -> 
+				postRepository.save(new Post("제목" + index, "Views from the six..." + index, postImage, index, 0, nowDateTime, nowDateTime, userInfo))
+			);
 		};
 	}
 }

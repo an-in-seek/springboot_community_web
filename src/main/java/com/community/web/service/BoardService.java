@@ -13,6 +13,10 @@ import com.community.web.domain.Comment;
 import com.community.web.repository.BoardRepository;
 import com.community.web.repository.CommentRepository;
 
+/**
+ * @author dktmr
+ *
+ */
 @Service
 public class BoardService {
 
@@ -50,6 +54,11 @@ public class BoardService {
         return boardRepository.findById(boardNo).orElse(new Board());
     }
     
+    /**
+     * 댓글 목록 조회
+     * @param board
+     * @return
+     */
     public List<Comment> findCommentList(Board board) {
         return commentRepository.findByBoard(board);
     }    

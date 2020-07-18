@@ -52,6 +52,9 @@ public class User implements Serializable {
 	
 	@Column
 	private String email;
+	
+	@Column
+	private String profileImage;
 
 	@Column
 	@Size(max = 4000)
@@ -75,21 +78,8 @@ public class User implements Serializable {
 		super();
 	}
 
-	public User(String username, String password, String userNickname, SexType userSex, String email,
-			LocalDateTime createdDate, LocalDateTime updatedDate, Set<Role> roles) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.userNickname = userNickname;
-		this.userSex = userSex;
-		this.email = email;
-		this.createdDate = createdDate;
-		this.updatedDate = updatedDate;
-		this.roles = roles;
-	}
-	
 	public User(String username, String password, String userNickname, String userBirthDate, SexType userSex,
-			String email, LocalDateTime createdDate, LocalDateTime updatedDate, Set<Role> roles) {
+			String email, String profileImage , LocalDateTime createdDate, LocalDateTime updatedDate, Set<Role> roles) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -97,6 +87,7 @@ public class User implements Serializable {
 		this.userBirthDate = userBirthDate;
 		this.userSex = userSex;
 		this.email = email;
+		this.profileImage = profileImage;
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
 		this.roles = roles;
@@ -158,6 +149,14 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+	
 	public String getPrincipal() {
 		return principal;
 	}

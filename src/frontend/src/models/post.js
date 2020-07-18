@@ -1,14 +1,13 @@
 
 export default class Post {
-    constructor(postNo, username, postTitle, postContent, postImage, like, dislike, createdDate, comments) {
+    constructor(postNo, username, postTitle, postContent, postImage, likes, dislikes, createdDate) {
       this.postNo = postNo;
-      this.username = username;
       this.postTitle = postTitle;
       this.postContent = postContent;
       this.postImage = postImage;
-      this.like = like;
-      this.dislike = dislike;
+      this.likes = likes;
+      this.dislikes = dislikes;
       this.createdDate = createdDate;
-      this.comments = comments;
+      this.username = username;
     }
   }

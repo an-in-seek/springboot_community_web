@@ -50,8 +50,6 @@ public class Comment implements Serializable {
 		this.updatedDate = updatedDate;
 		this.board = board;
 	}
-
-
 	
 	public User getUser() {
 		return user;
