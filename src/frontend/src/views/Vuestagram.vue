@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import posts from "../data/posts"; // mock 데이터 -> 추후 DB에서 데이터 가져오도록 수정
+  // import posts from "../data/posts"; // mock 데이터 -> 추후 DB에서 데이터 가져오도록 수정
   import UserService from '../services/user.service';
   import Post from '../views/Post';
 
@@ -25,13 +25,14 @@
     components: { post: Post },
     data() {
       return {
-        posts
+        posts: []
       };
     },
     mounted() {
-      UserService.getPublicContent().then(
+      UserService.getPostList().then(
         response => {
-          this.content = response.data;
+          this.content = response.data.content;
+          this.posts = response.data.posts;
         },
         error => {
           this.content = (error.response && error.response.data.message) || error.message || error.toString();

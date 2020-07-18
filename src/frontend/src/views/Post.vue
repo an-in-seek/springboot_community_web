@@ -5,7 +5,7 @@
             <b-card no-body style="max-width: 40rem;">
                 <template v-slot:header>
                   <div style="float:left;">
-                    <font-awesome-icon icon="user"/> {{post.username}}
+                    <font-awesome-icon icon="user"/> {{post.user.username}}
                   </div>
                   <div style="float:right;">
                     <a href="#" class="card-link"><font-awesome-icon icon="ellipsis-h"/></a>
@@ -16,13 +16,13 @@
                   <b-card-title>{{post.postTitle}}</b-card-title>
                   <b-card-text>{{post.postContent}}</b-card-text>
                   <b-button-group>
-                    <b-button variant="danger" @click="handleLike"><font-awesome-icon icon="heart"/> {{post.like}}</b-button>
-                    <b-button variant="secondary" @click="handleDislike"><font-awesome-icon icon="heart-broken"/> {{post.dislike}}</b-button>
+                    <b-button variant="danger" @click="handleLikes"><font-awesome-icon icon="heart"/> {{post.likes}}</b-button>
+                    <b-button variant="secondary" @click="handleDislikes"><font-awesome-icon icon="heart-broken"/> {{post.dislikes}}</b-button>
                     <b-button variant="success" @click="handleShowCommentList"><font-awesome-icon icon="comment"/> </b-button>
                     <b-button variant="primary" @click="handleShare"><font-awesome-icon icon="share-alt"/></b-button>
                   </b-button-group>
                   <div>
-                      <small class="text-muted">{{post.createdDate}}</small>
+                      <small class="text-muted">{{this.$moment(post.createdDate).format('YYYY-MM-DD HH:MM:SS')}}</small>
                   </div>
                 </b-card-body>
                 <template v-slot:footer>
@@ -59,11 +59,11 @@ export default {
     };
   },
   methods: {
-    handleLike(evt) {
+    handleLikes(evt) {
       evt.preventDefault()
       alert("좋아요!");
     }, 
-    handleDislike(evt) {
+    handleDislikes(evt) {
       evt.preventDefault()
       alert("싫어요!");
     }, 
