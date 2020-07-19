@@ -3,6 +3,7 @@ package com.community.web.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.community.web.domain.Post;
@@ -22,8 +23,8 @@ public class PostService {
      * Post 목록 조회
      * @return
      */
-    public List<Post> findPostList( ) {
-        return postRepository.findAll();
+    public List<Post> findPostList(Sort sort) {
+        return postRepository.findAll(sort);
     }
     
     /**

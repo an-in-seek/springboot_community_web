@@ -42,7 +42,7 @@ public class BoardController {
 	private BoardRepository boardRepository;
 	
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	/**
 	 * 사용자 게시판

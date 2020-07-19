@@ -78,6 +78,12 @@ export const router = new Router({
       name: 'userBoardDetail',
       // lazy-loaded
       component: () => import('./views/BoardUserDetail.vue')
+    },
+    {
+      path: '/post/detail',
+      name: 'postDetailNewRegister',
+      // lazy-loaded
+      component: () => import('./views/PostDetail.vue')
     }
   ]
 });

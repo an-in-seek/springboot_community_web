@@ -9,7 +9,7 @@
          &copy; 2020 Copyright: <a href="#"> Community.com </a>
       </div>
     </div>
-    <a href='#' class='btn-floating'>
+    <a v-on:click="createPost" href="#" class='btn-floating'>
       <div><font-awesome-icon icon="plus"/></div>
     </a> 
   </div>
@@ -38,6 +38,12 @@
           this.content = (error.response && error.response.data.message) || error.message || error.toString();
         }
       );
+    },
+    methods: {
+      createPost(evt){
+        evt.preventDefault();
+        this.$router.push({ path: `/post/detail` });
+      }
     }
   };
 </script>
