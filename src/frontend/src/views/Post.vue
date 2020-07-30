@@ -11,7 +11,9 @@
                     <a href="#" class="card-link"><font-awesome-icon icon="ellipsis-h"/></a>
                   </div>
                 </template>
-                <b-card-img :src="post.postImage" alt="Image"></b-card-img>
+                <div v-for="(image, index) in post.images" v-bind:key="index">
+                  <b-card-img :src="image.postImageUrl" alt="Image"></b-card-img>
+                </div>
                 <b-card-body>
                   <b-card-title>{{post.postTitle}}</b-card-title>
                   <b-card-text>{{post.postContent}}</b-card-text>

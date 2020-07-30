@@ -1,6 +1,8 @@
 server:
   port: 8090
 spring:
+  mvc:
+    static-path-pattern: /static/**
   jpa:
     hibernate:
       ddl-auto: create
@@ -19,6 +21,19 @@ spring:
   devtools:
     livereload:
       enabled: true
+  servlet:
+    multipart:
+      enabled: true
+      location: C:/
+      max-file-size: 100MB
+      max-request-size: 100MB
+      file-size-threshold: 1MB
+upload:
+  path:
+    image:
+      profile: /upload/image/profile/
+      post: /upload/image/post/
+    
 seek:
   app:
     jwtSecret: seekSecretKey

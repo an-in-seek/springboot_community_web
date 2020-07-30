@@ -2,10 +2,10 @@
     <div>
         <div class="card card-container mt-4">
             <b-form v-if="showMainForm">
-                <b-form-group id="postNoGroup" :label="lblPostNoGroup" label-for="postNo">
+                <b-form-group id="idGroup" :label="lblIdGroup" label-for="id">
                     <b-form-input
-                        id="postNo"
-                        v-model="post.postNo"
+                        id="id"
+                        v-model="post.id"
                         readonly
                         ></b-form-input>
                 </b-form-group>
@@ -31,6 +31,15 @@
                         v-model="post.postTitle"
                         :placeholder="phPostTitle"
                         :readonly="formReadonly"></b-form-input>
+                </b-form-group>
+
+                <b-form-group id="imagesGroup" :label="lblPostImageGroup" label-for="images">
+                    <b-form-file 
+                        id="images"
+                        v-model="post.images"
+                        :placeholder="phPostImage"
+                        :readonly="formReadonly"
+                        multiple="multiple"></b-form-file>
                 </b-form-group>
 
                 <b-form-group id="postContentGroup" :label="lblPostContentGroup" label-for="postContent">
@@ -87,12 +96,14 @@
                 showpostComment: false,
 
                 // To Do: 추후 DB에서 다국어 값으로 가져오는 방법으로 변경 필요
-                lblPostNoGroup: '번호:',
+                lblIdGroup: '번호:',
                 lblUsernameGroup: '작성자:',
                 lblCreatedDateGroup: '작성일:',
                 lblPostTitleGroup: '제목:',
+                lblPostImageGroup: '사진:',
                 lblPostContentGroup: '내용:',
                 phPostTitle: '제목을 입력하세요.',
+                phPostImage: '사진을 선택하세요.',
                 phPostContent: '내용을 입력하세요.',
                 btnCreate: '등록',
                 btnUpdate: '수정',
@@ -110,11 +121,11 @@
             this.showDeleteButton = false;
             this.showCommentButton = false;
             const storeUsername = this.$store.state.auth.user.username;
-            const postNo = Number(this.$route.params.postNo);
-            if(postNo){
+            const id = Number(this.$route.params.id);
+            if(id){
                 // 수정
-                PostService.getPostDetail(postNo).then(response => {
-                    this.post.postNo = response.data.post.postNo;
+                PostService.getPostDetail(id).then(response => {
+                    this.post.id = response.data.post.id;
                     this.post.username = CommonUtil.isEmpty(response.data.post.user) ? '' : response.data.post.user.username;
                     this.showCommentButton = true;
                     if(storeUsername == this.post.username){
@@ -125,13 +136,14 @@
                     }
                     this.post.createdDate = this.$moment(response.data.post.createdDate).format('YYYY-MM-DD HH:MM:SS');
                     this.post.postTitle = response.data.post.postTitle;
+                    //this.post.images = response.data.post.images[0].postImageUrl;
                     this.post.postContent = response.data.post.postContent;
                 }, error => {
                     this.post.postContent = (error.response && error.response.data.message) || error.message || error.toString();
                 });
                 
                 //코멘트 리스트
-                CommentService.getComments(postNo).then(response => {
+                CommentService.getComments(id).then(response => {
                     this.post.comments = response.data.items.map(item => {
                       item.createdDate = this.$moment(item.createdDate).format('YYYY-MM-DD HH:MM:SS'); 
                       item.updatedDate = this.$moment(item.updatedDate).format('YYYY-MM-DD HH:MM:SS');
@@ -144,17 +156,18 @@
                 // 등록
                 this.showCreateButton = true;
                 this.showCommentButton = false,
-                this.post.postNo = null;
+                this.post.id = null;
+                this.post.postTitle = null;
+                this.post.images = [];
+                this.post.postContent = null;
                 this.post.username = storeUsername;
                 this.post.createdDate = this.$moment(new Date()).format('YYYY-MM-DD HH:MM:SS');
-                this.post.postTitle = null;
-                this.post.postContent = null;
             }
         },
         methods: {
             // 등록
             handleCreate(evt) {
-                evt.preventDefault()
+                evt.preventDefault();
                 PostService
                     .createPost(this.post)
                     .then(response => {
@@ -195,8 +208,8 @@
             },
             commentchanged(){
                 this.showpostComment = false;
-                const postNo = Number(this.$route.params.postNo);
-                CommentService.getComments(postNo).then(response => {
+                const id = Number(this.$route.params.id);
+                CommentService.getComments(id).then(response => {
                     this.post.comments = response.data.items.map(item => {
                       item.createdDate = this.$moment(item.createdDate).format('YYYY-MM-DD HH:MM:SS'); 
                       item.updatedDate = this.$moment(item.updatedDate).format('YYYY-MM-DD HH:MM:SS');

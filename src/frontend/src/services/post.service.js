@@ -5,27 +5,28 @@ import Constant from '../constant'
 const API_URL = Constant.SERVER_IP+'/api/post/';
 
 class PostService {
-  getPostDetail(postNo) {
-    return axios.get(API_URL + 'detail', { headers: authHeader(), params: {postNo} });
+  getPostDetail(id) {
+    return axios.get(API_URL + 'detail', { headers: authHeader(), params: {id} });
   }
 
   createPost(post) {
-    return axios.post(API_URL + 'create', {
-      postNo: post.postNo,
-      postTitle: post.postTitle,
-      postImage: post.postImage,
-      postContent: post.postContent
-    }, {
-      headers: authHeader()
+    const formData = new FormData();
+    formData.append('id', post.id);
+    formData.append('postTitle', post.postTitle);
+    for(let images of post.images){
+      formData.append('images', images);
+    }
+    formData.append('postContent', post.postContent);
+    return axios.post(API_URL + 'create', formData, {
+      headers: authHeader(true)
     });
   }
 
   updatePost(post) {
     return axios.post(API_URL + 'update', {
-      postNo: post.postNo,
+      id: post.id,
       postTitle: post.postTitle,
-      postSubTitle: post.postSubTitle,
-      postType: post.postType,
+      images: post.images,
       postContent: post.postContent
     }, {
       headers: authHeader()
@@ -34,7 +35,7 @@ class PostService {
 
   deletePost(post) {
     return axios.post(API_URL + 'delete', {
-      postNo: post.postNo
+      id: post.id
     }, {
       headers: authHeader()
     });

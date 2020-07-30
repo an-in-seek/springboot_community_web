@@ -29,11 +29,11 @@ public class PostService {
     
     /**
      * Post 내용 조회
-     * @param postNo
+     * @param id
      * @return
      */
-    public Post findPostByPostNo(Long postNo) {
-        return postRepository.findById(postNo).orElse(new Post());
+    public Post findPostById(Long id) {
+        return postRepository.findById(id).orElse(new Post());
     }
     
 }

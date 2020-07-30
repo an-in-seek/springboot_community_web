@@ -2,15 +2,19 @@ package com.community.web.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -22,7 +26,7 @@ public class Post implements Serializable {
 	@Id
 	@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long postNo;
+	private Long id;
 	
 	@Column
 	private String postTitle;
@@ -30,8 +34,8 @@ public class Post implements Serializable {
 	@Column
 	private String postContent;
 	
-	@Column
-	private String postImage;
+	@OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<PostImage> images;
 	
 	@Column
 	private int likes;
@@ -46,32 +50,30 @@ public class Post implements Serializable {
 	private LocalDateTime updatedDate;
 	
 	@ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_user_id_to_post_no"))
+    @JoinColumn(name="userId")
 	private User user;
 
 	public Post() {
 		super();
 	}
 
-	public Post(String postTitle, String postContent, String postImage, int like, int dislike,
-			LocalDateTime createdDate, LocalDateTime updatedDate, User user) {
+	public Post(String postTitle, String postContent, int like, int dislike,
+			LocalDateTime createdDate, User user) {
 		super();
 		this.postTitle = postTitle;
 		this.postContent = postContent;
-		this.postImage = postImage;
 		this.likes = like;
 		this.dislikes = dislike;
 		this.createdDate = createdDate;
-		this.updatedDate = updatedDate;
 		this.user = user;
 	}
 
-	public Long getPostNo() {
-		return postNo;
+	public Long getId() {
+		return id;
 	}
 
-	public void setPostNo(Long postNo) {
-		this.postNo = postNo;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getPostTitle() {
@@ -89,13 +91,20 @@ public class Post implements Serializable {
 	public void setPostContent(String postContent) {
 		this.postContent = postContent;
 	}
-
-	public String getPostImage() {
-		return postImage;
+	
+	public List<PostImage> getImages() {
+		return images;
 	}
 
-	public void setPostImage(String postImage) {
-		this.postImage = postImage;
+	public void setImages(List<PostImage> images) {
+		this.images = images;
+	}
+	
+	public void addImage(PostImage image) {
+		if(images == null) {
+			images = new ArrayList<PostImage>();
+		}
+		images.add(image);
 	}
 
 	public int getLikes() {

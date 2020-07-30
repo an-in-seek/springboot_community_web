@@ -22,6 +22,7 @@ import javax.validation.constraints.Size;
 
 import com.community.web.domain.enums.SexType;
 import com.community.web.domain.enums.SocialType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email") })
@@ -37,6 +38,7 @@ public class User implements Serializable {
 	@Column
 	private String username;
 
+	@JsonIgnore
 	@Column
 	private String password;
 

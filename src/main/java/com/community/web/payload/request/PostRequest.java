@@ -2,23 +2,21 @@ package com.community.web.payload.request;
 
 import javax.validation.constraints.NotBlank;
 
-public class PostRequest {
-	
+public class PostRequest{
+
 	@NotBlank
-    private String postNo;
+    private String id;
 	
     private String postTitle;
  
     private String postContent;
     
-    private String postImage;
-    
-	public String getPostNo() {
-		return postNo;
+	public String getId() {
+		return id;
 	}
 
-	public void setPostNo(String postNo) {
-		this.postNo = postNo;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getPostTitle() {
@@ -35,13 +33,5 @@ public class PostRequest {
 
 	public void setPostContent(String postContent) {
 		this.postContent = postContent;
-	}
-
-	public String getPostImage() {
-		return postImage;
-	}
-
-	public void setPostImage(String postImage) {
-		this.postImage = postImage;
 	}
 }
