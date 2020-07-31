@@ -1,5 +1,5 @@
 const path = require('path');
-const url = 'http://34.64.174.201:8090';
+const url = 'http://127.0.0.1:8090';
 
 module.exports = {
 	outputDir: path.resolve(__dirname, "../" + "main/resources/static"),
