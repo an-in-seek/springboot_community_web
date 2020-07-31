@@ -36,7 +36,7 @@ upload:
       windows:
         post: C:/upload/image/post/
       linux:
-        post: /upload/image/post/
+        post: /home/dktmrorl/upload/image/post/
 seek:
   app:
     jwtSecret: seekSecretKey
