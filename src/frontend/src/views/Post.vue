@@ -11,9 +11,28 @@
                     <a href="#" class="card-link"><font-awesome-icon icon="ellipsis-h"/></a>
                   </div>
                 </template>
-                <div v-for="(image, index) in post.images" v-bind:key="index">
-                  <b-card-img :src="image.postImageUrl" alt="Image"></b-card-img>
-                </div>
+                <b-carousel
+                      v-model="slide"
+                      :interval="3000"
+                      :controls="post.images.length > 1 ? true : false"
+                      :indicators="post.images.length > 1 ? true : false"
+                      img-width="1024"
+                      img-height="768"
+                      @sliding-start="onSlideStart"
+                      @sliding-end="onSlideEnd">
+                  <div v-for="(image, index) in post.images" v-bind:key="index">
+                    <b-carousel-slide>
+                      <template v-slot:img>
+                      <img
+                        class="d-block img-fluid w-100"
+                        width="1024"
+                        height="768"
+                        :src="image.postImageUrl"
+                        alt="image slot">
+                      </template>
+                    </b-carousel-slide>
+                  </div>
+                </b-carousel>
                 <b-card-body>
                   <b-card-title>{{post.postTitle}}</b-card-title>
                   <b-card-text>{{post.postContent}}</b-card-text>

@@ -1,13 +1,19 @@
 package com.community.web.controller;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.transaction.SystemException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.PathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -98,16 +104,28 @@ public class PostController {
 		post.setCreatedDate(LocalDateTime.now());
 		post.setUser(user);
 		for (MultipartFile multipartFile : images) {
+			// 서버 로컬 경로에 이미지 저장
 			String originFileName = multipartFile.getOriginalFilename();
 			long postImageFileSize = multipartFile.getSize();
+			String postImageUrl = uploadPostImagePath + originFileName;
 			String realPostImageUrl = uploadPostImagePathForWindows + originFileName;
 			if (CommonUtil.isUnix()) {
 				realPostImageUrl = uploadPostImagePathForLinux + originFileName;
 			}
 			multipartFile.transferTo(new File(realPostImageUrl));
-
-			// Post Image 저장
-			String postImageUrl = uploadPostImagePath + originFileName;
+			
+			// 이미지 해상도 조정해서 로컬에 다시 저장
+			String[] splitUrl = realPostImageUrl.split("\\.");
+			int splitUrlLength = splitUrl.length;
+			if(splitUrlLength <= 0) {
+				throw new SystemException();
+			}
+			String formatName = splitUrl[splitUrlLength - 1];
+			Resource resource = new PathResource(postImageUrl);
+			BufferedImage resizedImage = CommonUtil.resizeImage(resource.getInputStream(), 1024, 768);
+			ImageIO.write(resizedImage, formatName, new File(realPostImageUrl));
+			
+			// 이미지 저장
 			PostImage postImage = new PostImage();
 			postImage.setPost(post);
 			postImage.setPostImageUrl(postImageUrl);
