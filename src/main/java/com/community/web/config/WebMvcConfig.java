@@ -13,6 +13,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Value("${upload.path.image.default.post}")
 	private String uploadPostImagePath;
+	
+	@Value("${upload.path.image.linux.post}") 
+	private String uploadPostImagePathForLinux;
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -24,7 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 					.addResolver(new PathResourceResolver());
 		} else if (CommonUtil.isUnix()) {
 			registry.addResourceHandler(uploadPostImagePath + "/**")
-					.addResourceLocations(uploadPostImagePath)
+					.addResourceLocations(uploadPostImagePathForLinux)
 					.setCachePeriod(3600)
 					.resourceChain(true)
 					.addResolver(new PathResourceResolver());
