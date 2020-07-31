@@ -27,14 +27,12 @@ import com.community.web.payload.response.MessageResponse;
 import com.community.web.repository.PostRepository;
 import com.community.web.repository.UserRepository;
 import com.community.web.service.PostService;
+import com.community.web.util.CommonUtil;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/post")
 public class PostController {
-
-	@Value("${upload.path.image.post}")
-	String uploadPostImagePath;
 
 	@Autowired
 	private PostService postService;
@@ -81,8 +79,13 @@ public class PostController {
 	 * @return
 	 */
 	@PostMapping("/create")
-	public ResponseEntity<?> createPost(@RequestParam String postTitle, @RequestParam String postContent,
-			@RequestParam List<MultipartFile> images) throws Throwable {
+	public ResponseEntity<?> createPost(@RequestParam String postTitle
+			, @RequestParam String postContent
+			, @RequestParam List<MultipartFile> images
+			, @Value("${upload.path.image.default.post}") String uploadPostImagePath
+			, @Value("${upload.path.image.windows.post}") String uploadPostImagePathForWindows
+			, @Value("${upload.path.image.linux.post}") String uploadPostImagePathForLinux) throws Throwable {
+		
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userRepository.findByUsername(username).get();
 
@@ -97,10 +100,14 @@ public class PostController {
 		for (MultipartFile multipartFile : images) {
 			String originFileName = multipartFile.getOriginalFilename();
 			long postImageFileSize = multipartFile.getSize();
-			String postImageUrl = uploadPostImagePath + originFileName;
-			multipartFile.transferTo(new File(postImageUrl));
-			
+			String realPostImageUrl = uploadPostImagePathForWindows + originFileName;
+			if (CommonUtil.isUnix()) {
+				realPostImageUrl = uploadPostImagePathForLinux + originFileName;
+			}
+			multipartFile.transferTo(new File(realPostImageUrl));
+
 			// Post Image 저장
+			String postImageUrl = uploadPostImagePath + originFileName;
 			PostImage postImage = new PostImage();
 			postImage.setPost(post);
 			postImage.setPostImageUrl(postImageUrl);
@@ -110,7 +117,7 @@ public class PostController {
 			post.addImage(postImage);
 		}
 		postRepository.save(post);
-		
+
 		/*
 		// Post Image 저장
 		PostImage postImage = null;

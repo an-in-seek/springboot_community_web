@@ -24,16 +24,19 @@ spring:
   servlet:
     multipart:
       enabled: true
-      location: C:/
+      location: ${java.io.tmpdir}
       max-file-size: 100MB
       max-request-size: 100MB
       file-size-threshold: 1MB
 upload:
   path:
     image:
-      profile: /upload/image/profile/
-      post: /upload/image/post/
-    
+      default:
+        post: /upload/image/post/
+      windows:
+        post: C:/upload/image/post/
+      linux:
+        post: /upload/image/post/
 seek:
   app:
     jwtSecret: seekSecretKey
