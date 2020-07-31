@@ -27,7 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 					.addResolver(new PathResourceResolver());
 		} else if (CommonUtil.isUnix()) {
 			registry.addResourceHandler(uploadPostImagePath + "/**")
-					.addResourceLocations(uploadPostImagePathForLinux)
+					.addResourceLocations("file:" + uploadPostImagePathForLinux)
 					.setCachePeriod(3600)
 					.resourceChain(true)
 					.addResolver(new PathResourceResolver());
