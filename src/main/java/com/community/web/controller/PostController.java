@@ -104,24 +104,29 @@ public class PostController {
 		post.setCreatedDate(LocalDateTime.now());
 		post.setUser(user);
 		for (MultipartFile multipartFile : images) {
+			String realPostImageUrl = "";
+			Resource resource = null;
+			
 			// 서버 로컬 경로에 이미지 저장
 			String originFileName = multipartFile.getOriginalFilename();
 			long postImageFileSize = multipartFile.getSize();
 			String postImageUrl = uploadPostImagePath + originFileName;
-			String realPostImageUrl = uploadPostImagePathForWindows + originFileName;
-			if (CommonUtil.isUnix()) {
+			if(CommonUtil.isWindows()) {
+				realPostImageUrl = uploadPostImagePathForWindows + originFileName;
+				resource = new PathResource(postImageUrl);
+			} else if (CommonUtil.isUnix()) {
 				realPostImageUrl = uploadPostImagePathForLinux + originFileName;
+				resource = new PathResource(realPostImageUrl);
 			}
 			multipartFile.transferTo(new File(realPostImageUrl));
 			
 			// 이미지 해상도 조정해서 로컬에 다시 저장
-			String[] splitUrl = realPostImageUrl.split("\\.");
-			int splitUrlLength = splitUrl.length;
-			if(splitUrlLength <= 0) {
+			String[] splitName = originFileName.split("\\.");
+			int splitLength = splitName.length;
+			if(splitLength <= 0) {
 				throw new SystemException();
 			}
-			String formatName = splitUrl[splitUrlLength - 1];
-			Resource resource = new PathResource(postImageUrl);
+			String formatName = splitName[splitLength - 1];
 			BufferedImage resizedImage = CommonUtil.resizeImage(resource.getInputStream(), 1024, 768);
 			ImageIO.write(resizedImage, formatName, new File(realPostImageUrl));
 			
