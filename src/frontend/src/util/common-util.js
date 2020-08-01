@@ -25,7 +25,7 @@ class CommonUtil {
     showToast(obj, variant, message) {
         obj.$bvToast.toast(message, { 
             title: `Variant ${variant || 'default'}`,
-            toaster: 'b-toaster-bottom-right',
+            toaster: 'b-toaster-top-right',
             variant: variant,
             solid: true, 
             appendToast: false,
