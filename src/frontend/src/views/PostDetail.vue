@@ -27,10 +27,14 @@
                 <b-form-group id="postTitleGroup" :label="lblPostTitleGroup" label-for="postTitle">
                     <b-form-input
                         id="postTitle"
-                        required="required"
+                        required
+                        trim
                         v-model="post.postTitle"
+                        :state="postTitleState"
                         :placeholder="phPostTitle"
-                        :readonly="formReadonly"></b-form-input>
+                        :readonly="formReadonly">
+                    </b-form-input>
+                    <b-form-invalid-feedback id="postTitleFeedback"></b-form-invalid-feedback>
                 </b-form-group>
 
                 <b-form-group id="imagesGroup" :label="lblPostImageGroup" label-for="images">
@@ -45,11 +49,16 @@
                 <b-form-group id="postContentGroup" :label="lblPostContentGroup" label-for="postContent">
                     <b-form-textarea
                         id="postContent"
+                        required
+                        trim
                         rows="6"
                         max-rows="6"
                         v-model="post.postContent"
+                        :state="postContentState"
                         :placeholder="phPostContent"
-                        :readonly="formReadonly"></b-form-textarea>
+                        :readonly="formReadonly">
+                    </b-form-textarea>
+                    <b-form-invalid-feedback id="postContentFeedback"></b-form-invalid-feedback>
                 </b-form-group>
 
                 <b-row>
@@ -84,6 +93,14 @@
     import CommonUtil from '../util/common-util';
     export default {
         name: 'userPostDetail',
+        computed: {
+            postTitleState(){
+                return this.post.postTitle ? true : false;
+            },
+            postContentState(){
+                return this.post.postContent ? true : false;
+            }
+        },
         data() {
             return {
                 // show 상태값
@@ -168,6 +185,14 @@
             // 등록
             handleCreate(evt) {
                 evt.preventDefault();
+                if(!this.post.postTitle){
+                    CommonUtil.showToast(this, "danger", this.phPostTitle);
+                    return false;
+                }
+                if(!this.post.postContent){
+                    CommonUtil.showToast(this, "danger", this.phPostContent);
+                    return false;
+                }
                 PostService
                     .createPost(this.post)
                     .then(response => {
