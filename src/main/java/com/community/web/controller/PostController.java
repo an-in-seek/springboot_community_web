@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,10 +56,9 @@ public class PostController {
 	 */
 	@GetMapping("/list")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public Map<String, Object> userPostList(@RequestParam(defaultValue = "1") Integer limit) {
-		PageRequest pageRequest = PageRequest.of(limit, 5, Sort.by("id").descending());
-		List<Post> postList = postService.findPostListByPage(pageRequest);
+	public Map<String, Object> userPostList() {
 		Map<String, Object> map = new HashMap<String, Object>();
+		List<Post> postList = postService.findPostList(Sort.by("id").descending());
 		map.put("posts", postList);
 		return map;
 	}
