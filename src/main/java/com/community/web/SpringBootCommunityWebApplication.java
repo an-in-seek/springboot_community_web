@@ -78,7 +78,7 @@ public class SpringBootCommunityWebApplication implements WebMvcConfigurer {
 			IntStream.rangeClosed(1, 200).forEach(index -> boardRepository.save(new Board("제목" + index, "부제목" + index,
 					"내용" + index, BoardType.FREE, nowDateTime, nowDateTime, userInfo)));
 
-			for (int index = 1; index < 6; index++) {
+			for (int index = 1; index < 50; index++) {
 				// Vuestagram 데이터 생성
 				Post post = new Post("제목" + index, "Views from the six..." + index, index, 0, nowDateTime, userInfo);
 				postRepository.save(post);

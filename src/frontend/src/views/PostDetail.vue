@@ -2,6 +2,7 @@
     <div>
         <div class="card card-container mt-4">
             <b-form v-if="showMainForm">
+                <!-- ID -->
                 <b-form-group id="idGroup" :label="lblIdGroup" label-for="id">
                     <b-form-input
                         id="id"
@@ -9,21 +10,21 @@
                         readonly
                         ></b-form-input>
                 </b-form-group>
-
+                <!-- 사용자 -->
                 <b-form-group id="usernameGroup" :label="lblUsernameGroup" label-for="username">
                     <b-form-input
                         id="username"
                         v-model="post.username"
                         readonly></b-form-input>
                 </b-form-group>
-
+                <!-- 날짜 -->
                 <b-form-group id="createdDateGroup" :label="lblCreatedDateGroup" label-for="createdDate">
                     <b-form-input
                         id="createdDate"
                         v-model="post.createdDate"
                         readonly></b-form-input>
                 </b-form-group>
-
+                <!-- 제목 -->
                 <b-form-group id="postTitleGroup" :label="lblPostTitleGroup" label-for="postTitle">
                     <b-form-input
                         id="postTitle"
@@ -36,7 +37,7 @@
                     </b-form-input>
                     <b-form-invalid-feedback id="postTitleFeedback"></b-form-invalid-feedback>
                 </b-form-group>
-
+                <!-- 사진 -->
                 <b-form-group id="imagesGroup" :label="lblPostImageGroup" label-for="images">
                     <b-form-file 
                         id="images"
@@ -45,7 +46,7 @@
                         :readonly="formReadonly"
                         multiple="multiple"></b-form-file>
                 </b-form-group>
-
+                <!-- 내용 -->
                 <b-form-group id="postContentGroup" :label="lblPostContentGroup" label-for="postContent">
                     <b-form-textarea
                         id="postContent"
@@ -60,7 +61,7 @@
                     </b-form-textarea>
                     <b-form-invalid-feedback id="postContentFeedback"></b-form-invalid-feedback>
                 </b-form-group>
-
+                <!-- 버튼 -->
                 <b-row>
                     <b-col lg="12" class="pb-1" v-if="showCreateButton">
                         <b-button block size="lg" variant="primary" @click="handleCreate">{{btnCreate}}</b-button>
@@ -75,12 +76,13 @@
                         <b-button block size="lg" variant="success" @click="handleComment">{{btnComment}}</b-button>
                     </b-col>
                 </b-row>
-                 <div v-if="showpostComment">
-                    <CommentForm :post="this.post" v-on:commentchanged="commentchanged">
-                    </CommentForm>
-                    <CommentList :comments="this.post.comments" v-on:commentchanged="commentchanged">
-                    </CommentList>
-                 </div>
+                <!-- 댓글 -->
+                <div v-if="showpostComment">
+                    <CommentForm :post="this.post" v-on:commentchanged="commentchanged"></CommentForm>
+                    <CommentList
+                        :comments="this.post.comments"
+                        v-on:commentchanged="commentchanged"></CommentList>
+                </div>
             </b-form>
         </div>
     </div>
