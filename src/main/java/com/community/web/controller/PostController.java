@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,9 +57,10 @@ public class PostController {
 	 */
 	@GetMapping("/list")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public Map<String, Object> userPostList() {
+	public Map<String, Object> userPostList(@RequestParam(defaultValue = "1") Integer limit) {
+		PageRequest pageRequest = PageRequest.of(limit, 5, Sort.by("id").descending());
+		List<Post> postList = postService.findPostListByPage(pageRequest);
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Post> postList = postService.findPostList(Sort.by("id").descending());
 		map.put("posts", postList);
 		return map;
 	}
@@ -85,13 +87,12 @@ public class PostController {
 	 * @return
 	 */
 	@PostMapping("/create")
-	public ResponseEntity<?> createPost(@RequestParam String postTitle
-			, @RequestParam String postContent
-			, @RequestParam List<MultipartFile> images
-			, @Value("${upload.path.image.default.post}") String uploadPostImagePath
-			, @Value("${upload.path.image.windows.post}") String uploadPostImagePathForWindows
-			, @Value("${upload.path.image.linux.post}") String uploadPostImagePathForLinux) throws Throwable {
-		
+	public ResponseEntity<?> createPost(@RequestParam String postTitle, @RequestParam String postContent,
+			@RequestParam List<MultipartFile> images,
+			@Value("${upload.path.image.default.post}") String uploadPostImagePath,
+			@Value("${upload.path.image.windows.post}") String uploadPostImagePathForWindows,
+			@Value("${upload.path.image.linux.post}") String uploadPostImagePathForLinux) throws Throwable {
+
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userRepository.findByUsername(username).get();
 
@@ -106,12 +107,12 @@ public class PostController {
 		for (MultipartFile multipartFile : images) {
 			String realPostImageUrl = "";
 			Resource resource = null;
-			
+
 			// 서버 로컬 경로에 이미지 저장
 			String originFileName = multipartFile.getOriginalFilename();
 			long postImageFileSize = multipartFile.getSize();
 			String postImageUrl = uploadPostImagePath + originFileName;
-			if(CommonUtil.isWindows()) {
+			if (CommonUtil.isWindows()) {
 				realPostImageUrl = uploadPostImagePathForWindows + originFileName;
 				resource = new PathResource(postImageUrl);
 			} else if (CommonUtil.isUnix()) {
@@ -119,17 +120,17 @@ public class PostController {
 				resource = new PathResource(realPostImageUrl);
 			}
 			multipartFile.transferTo(new File(realPostImageUrl));
-			
+
 			// 이미지 해상도 조정해서 로컬에 다시 저장
 			String[] splitName = originFileName.split("\\.");
 			int splitLength = splitName.length;
-			if(splitLength <= 0) {
+			if (splitLength <= 0) {
 				throw new SystemException();
 			}
 			String formatName = splitName[splitLength - 1];
 			BufferedImage resizedImage = CommonUtil.resizeImage(resource.getInputStream(), 1024, 768);
 			ImageIO.write(resizedImage, formatName, new File(realPostImageUrl));
-			
+
 			// 이미지 저장
 			PostImage postImage = new PostImage();
 			postImage.setPost(post);
@@ -142,25 +143,18 @@ public class PostController {
 		postRepository.save(post);
 
 		/*
-		// Post Image 저장
-		PostImage postImage = null;
-		List<PostImage> postImageList = new ArrayList<PostImage>();
-		for (MultipartFile multipartFile : images) {
-			String originFileName = multipartFile.getOriginalFilename();
-			long postImageFileSize = multipartFile.getSize();
-			String postImageUrl = uploadPath + originFileName;
-			multipartFile.transferTo(new File(postImageUrl));
-			postImage = new PostImage();
-			postImage.setPost(post);
-			postImage.setPostImageUrl(postImageUrl);
-			postImage.setPostImageFileName(originFileName);
-			postImage.setPostImageFileSize(postImageFileSize);
-			postImage.setCreatedDate(LocalDateTime.now());
-			postImage.setUser(user);
-			postImageList.add(postImage);
-		}
-		postImageRepository.saveAll(postImageList);
-		*/
+		 * // Post Image 저장 PostImage postImage = null; List<PostImage> postImageList =
+		 * new ArrayList<PostImage>(); for (MultipartFile multipartFile : images) {
+		 * String originFileName = multipartFile.getOriginalFilename(); long
+		 * postImageFileSize = multipartFile.getSize(); String postImageUrl = uploadPath
+		 * + originFileName; multipartFile.transferTo(new File(postImageUrl)); postImage
+		 * = new PostImage(); postImage.setPost(post);
+		 * postImage.setPostImageUrl(postImageUrl);
+		 * postImage.setPostImageFileName(originFileName);
+		 * postImage.setPostImageFileSize(postImageFileSize);
+		 * postImage.setCreatedDate(LocalDateTime.now()); postImage.setUser(user);
+		 * postImageList.add(postImage); } postImageRepository.saveAll(postImageList);
+		 */
 
 		return ResponseEntity.ok(new MessageResponse("Post created successfully!"));
 	}
