@@ -4,7 +4,7 @@ import { router } from './router';
 import store from './store';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 import { BootstrapVue, IconsPlugin, FormPlugin } from 'bootstrap-vue';
 import VeeValidate from 'vee-validate';
 import Vuex from 'vuex';
@@ -27,10 +27,11 @@ import {
   faEllipsisH,
   faPlus
 } from '@fortawesome/free-solid-svg-icons';
-import GAuth from 'vue-google-oauth2'
+import GAuth from 'vue-google-oauth2';
 import Constant from './constant';
-import CommentForm from './views/components/CommentForm'
-import CommentList from './views/components/CommentList'
+import CommentForm from './views/components/CommentForm';
+import CommentList from './views/components/CommentList';
+import InfiniteLoading from 'vue-infinite-loading';
 
 library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faList, faAddressCard, faHeart, faHeartBroken, faComment, faShareAlt, faEllipsisH, faPlus);
 
@@ -50,6 +51,8 @@ Vue.use(VeeValidate, {
 Vue.use(Vuex);
 // Install VueMoment
 Vue.use(VueMomentJS, moment);
+// Install InfiniteLoading
+Vue.use(InfiniteLoading);
 
 Vue.use(GAuth, {
   clientId: Constant.GOOGLE_API_KEY,
