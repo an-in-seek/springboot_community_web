@@ -5,10 +5,16 @@
             <b-card no-body style="max-width: 40rem;">
                 <template v-slot:header>
                   <div style="float:left;">
-                    <font-awesome-icon icon="user"/> {{post.user.username}}
+                    <div style="vertical-align: middle; display: inline-block;"><font-awesome-icon icon="user"/> {{post.user.username}}</div>
                   </div>
                   <div style="float:right;">
-                    <a href="#" class="card-link"><font-awesome-icon icon="ellipsis-h"/></a>
+                    <b-dropdown size="sm" variant="link" toggle-class="text-decoration-none" no-caret="no-caret" right>
+                        <template v-slot:button-content>
+                            <font-awesome-icon icon="ellipsis-h"/>
+                        </template>
+                        <b-dropdown-item href="#" @click="clickUpdate">수정</b-dropdown-item>
+                        <b-dropdown-item href="#" @click="clickDelete">삭제</b-dropdown-item>
+                    </b-dropdown>
                   </div>
                 </template>
                 <b-carousel
@@ -37,10 +43,10 @@
                   <b-card-title>{{post.postTitle}}</b-card-title>
                   <b-card-text>{{post.postContent}}</b-card-text>
                   <b-button-group>
-                    <b-button variant="danger" @click="handleLikes"><font-awesome-icon icon="heart"/> {{post.likes}}</b-button>
-                    <b-button variant="secondary" @click="handleDislikes"><font-awesome-icon icon="heart-broken"/> {{post.dislikes}}</b-button>
-                    <b-button variant="success" @click="handleShowCommentList"><font-awesome-icon icon="comment"/> </b-button>
-                    <b-button variant="primary" @click="handleShare"><font-awesome-icon icon="share-alt"/></b-button>
+                    <b-button variant="danger" @click="clickLikes"><font-awesome-icon icon="heart"/> {{post.likes}}</b-button>
+                    <b-button variant="secondary" @click="clickDislikes"><font-awesome-icon icon="heart-broken"/> {{post.dislikes}}</b-button>
+                    <b-button variant="success" @click="clickShowCommentList"><font-awesome-icon icon="comment"/> </b-button>
+                    <b-button variant="primary" @click="clickShare"><font-awesome-icon icon="share-alt"/></b-button>
                   </b-button-group>
                   <div>
                       <small class="text-muted">{{this.$moment(post.createdDate).format('YYYY-MM-DD HH:MM:SS')}}</small>
@@ -51,7 +57,7 @@
                     <b-input-group>
                         <b-form-input :placeholder="phComment"></b-form-input>
                         <b-input-group-append>
-                             <b-button variant="info" @click="handleCreateComment">{{btnCreate}}</b-button>
+                             <b-button variant="info" @click="clickCreateComment">{{btnCreate}}</b-button>
                         </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
@@ -80,25 +86,33 @@ export default {
     };
   },
   methods: {
-    handleLikes(evt) {
-      evt.preventDefault()
+    clickLikes(evt) {
+      evt.preventDefault();
       alert("좋아요!");
     }, 
-    handleDislikes(evt) {
-      evt.preventDefault()
+    clickDislikes(evt) {
+      evt.preventDefault();
       alert("싫어요!");
     }, 
-    handleShowCommentList(evt){
-      evt.preventDefault()
+    clickShowCommentList(evt){
+      evt.preventDefault();
       alert("댓글목록!");
     },
-     handleCreateComment(evt){
-      evt.preventDefault()
+    clickCreateComment(evt){
+      evt.preventDefault();
       alert("댓글등록!");
     },
-    handleShare(evt){
-      evt.preventDefault()
+    clickShare(evt){
+      evt.preventDefault();
       alert("공유하기!");
+    },
+    clickUpdate(evt){
+      evt.preventDefault();
+      alert("수정하기!");
+    },
+    clickDelete(evt){
+      evt.preventDefault();
+      alert("삭제하기!");
     },
     onSlideStart() {
         this.sliding = true
