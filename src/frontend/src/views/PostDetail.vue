@@ -43,7 +43,8 @@
                         v-model="post.images"
                         :placeholder="phPostImage"
                         :readonly="formReadonly"
-                        multiple="multiple"></b-form-file>
+                        multiple="multiple"
+                        :file-name-formatter="formatNames"></b-form-file>
                 </b-form-group>
 
                 <b-form-group id="postContentGroup" :label="lblPostContentGroup" label-for="postContent">
@@ -231,6 +232,7 @@
                 evt.preventDefault()
                 this.showpostComment = this.showpostComment == true ? false : true;
             },
+            //
             commentchanged(){
                 this.showpostComment = false;
                 const id = Number(this.$route.params.id);
@@ -244,6 +246,10 @@
                 }, error => {
                     console.log(error);
                 });   
+            },
+            // 파일 이름 포맷
+            formatNames(files){
+                return files.length === 1 ? files[0].name : `${files.length} files selected`;
             }
         }
     };
